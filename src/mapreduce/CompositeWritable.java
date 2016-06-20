@@ -7,34 +7,76 @@ import java.io.IOException;
 import org.apache.hadoop.io.Writable;
 
 public class CompositeWritable implements Writable {
-    double media = 0;
+    double valor = 0;
+	double media = 0;
     double desvioPadrao = 0;
     double variancia = 0;
 
-    public CompositeWritable() {}
+    public double getValor() {
+		return valor;
+	}
+
+	public void setValor(double valor) {
+		this.valor = valor;
+	}
+
+	public double getMedia() {
+		return media;
+	}
+
+	public void setMedia(double media) {
+		this.media = media;
+	}
+
+	public double getDesvioPadrao() {
+		return desvioPadrao;
+	}
+
+	public void setDesvioPadrao(double desvioPadrao) {
+		this.desvioPadrao = desvioPadrao;
+	}
+
+	public double getVariancia() {
+		return variancia;
+	}
+
+	public void setVariancia(double variancia) {
+		this.variancia = variancia;
+	}
+
+	public CompositeWritable() {}
+    
+    public CompositeWritable(double valor) {
+    	this.valor = valor;
+    }
 
     public CompositeWritable(double media, double desvioPadrao, double variancia) {
         this.media = media;
         this.desvioPadrao = desvioPadrao;
         this.variancia = variancia;
-    }
+    } 
+
 
     public void readFields(DataInput in) throws IOException {
-        media = in.readDouble();
+        valor = in.readInt();
+    	media = in.readDouble();
         desvioPadrao = in.readDouble();
         variancia = in.readDouble();
     }
 
     public void write(DataOutput out) throws IOException {
-        out.writeDouble(media);
+    	out.writeDouble(valor);
+    	out.writeDouble(media);
         out.writeDouble(desvioPadrao);
         out.writeDouble(variancia);
     }
 
     public void merge(CompositeWritable other) {
-        this.media += other.media;
-        this.desvioPadrao += other.desvioPadrao;
-        this.variancia += other.variancia;
+    	this.valor += other.valor;
+/*		this.media += other.media;
+		this.desvioPadrao += other.desvioPadrao;
+		this.variancia += other.variancia;
+*/
     }
 
     @Override
