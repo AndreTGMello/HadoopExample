@@ -1,5 +1,7 @@
 package mapreduce;
 
+import java.util.Scanner;
+
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
@@ -21,7 +23,7 @@ public class AggregateJob extends Configured implements Tool {
 	    FileInputFormat.addInputPath(job, new Path(args[0])); //new Path(args[0]+"/*nome_da_pasta" para que arquivos dentro de pastas tambem sejam lidos
 	    FileOutputFormat.setOutputPath(job, new Path(args[1]));
 	    
-	    job.setMapperClass(ProjectionMapper.class);
+	    job.setMapperClass(MediaMapper.class);
 	    job.setCombinerClass(MediaReducer.class);
 	    job.setReducerClass(MediaReducer.class);
 
@@ -31,7 +33,50 @@ public class AggregateJob extends Configured implements Tool {
 	    return job.waitForCompletion(true) ? 0 : 1;
 		}
 		public static void main(String[] args) throws Exception {
-		    int rc = ToolRunner.run(new AggregateJob(), args);
-		    System.exit(rc);
+			Scanner scan = new Scanner(System.in);
+			
+			String info = null;
+			String anoIni = null;
+			String anoFim = null;
+			String agregador = null; 
+			String saida = null;
+			
+			while(true){
+				System.out.println("Digite qual informacao deseja analisar. "
+						+ "\nOpcoes: "
+						+ "\nMedTemperatura = Temperatura media"
+						+ "\nMedCondensassao = Ponto medio de condensassao da agua"
+						+ "\nMedMar = Nivel do mar medio"
+						+ "\nMedPressao = Pressao media"
+						+ "\nMedVento = Velocidade do vento media"
+						+ "\nMaxVento = Velocidade maxima do vento"
+						+ "\nMaxRajada = Velocidade maxima das rajadas de vento"
+						+ "\nMaxTemperatura = Maximas da temperatura"
+						+ "\nMinTemperatura = Minimas da temperatura"
+						+ "\nPrecipitacao = Quantidade de precipitacao"
+						+ "\nNeve = Profundidade da neve"
+						+ "\n");
+				info = scan.next();
+				
+				System.out.println("Digite sobre qual intervalo de anos deseja realizar a operacao: ");
+				System.out.println("Inicio: ");
+				anoIni = scan.next();
+				System.out.println("Fim: ");
+				anoFim = scan.next();
+				
+				System.out.println("Digite como deseja agregar os dados"
+						+ "\nOpcoes: "
+						+ "\nAno"
+						+ "\nMes"
+						+ "\nSemana: ");
+				agregador = scan.next();
+				
+				System.out.println("Digite o nome do arquivo de saida (nao repita nomes): ");
+				saida = scan.next();
+				
+			    int rc = ToolRunner.run(new AggregateJob(), args);
+			    System.exit(rc);
+			}
+			
 		}
 }
