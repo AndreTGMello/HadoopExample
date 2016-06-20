@@ -6,7 +6,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
  
-public class ProjectionMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 	private Text word = new Text();
 	private DoubleWritable count = new DoubleWritable();
 	
