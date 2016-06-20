@@ -6,19 +6,36 @@ import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Reducer;
  
-public class MediaReducer<KEY> extends Reducer<KEY, DoubleWritable,KEY,DoubleWritable> {
+public class MediaReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY, CompositeWritable> {
  
-  private DoubleWritable result = new DoubleWritable();
+	private CompositeWritable resultSet = null;
   
-  public void reduce(KEY key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
-    double sum = 0;
-    int contador = 0;
-    for (DoubleWritable val : values) {
-      sum += val.get();
-      contador++;
-    }
-    result.set(sum/contador);
-    context.write(key, result);
+	public void reduce(KEY key, Iterable<CompositeWritable> values, Context context) throws IOException, InterruptedException {
+		int n = 0;
+		double soma = 0;
+		double variancia = 0;
+		double media = 0;
+		double desvioPadrao = 0;
+/*
+		for (CompositeWritable compWrite : values) {
+			compWrite.merge(compWrite);
+			n++;
+		}
+*/
+		for (CompositeWritable compWrite : values) {
+			soma += compWrite.getValor();
+			n++;
+		}
+		media = soma/n;
+		
+		for (CompositeWritable compWrite : values) {
+			variancia += Math.pow((compWrite.getValor()-media), 2);
+		}
+		variancia = variancia/(n-1);
+		desvioPadrao = Math.sqrt(variancia);
+		
+		resultSet = new CompositeWritable(media, variancia, desvioPadrao);
+		context.write(key, resultSet);
   }
  
 }
