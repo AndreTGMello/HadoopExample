@@ -7,10 +7,10 @@ import java.io.IOException;
 import org.apache.hadoop.io.Writable;
 
 public class CompositeWritable implements Writable {
-    double valor = 0;
-	double media = 0;
-    double desvioPadrao = 0;
-    double variancia = 0;
+    double valor = 0.0;
+	double media = 0.0;
+    double desvioPadrao = 0.0;
+    double variancia = 0.0;
 
     public double getValor() {
 		return valor;

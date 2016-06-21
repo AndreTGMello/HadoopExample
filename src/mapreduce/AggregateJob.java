@@ -5,6 +5,7 @@ import java.util.Scanner;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
@@ -26,26 +27,29 @@ public class AggregateJob extends Configured implements Tool {
 		job.setJarByClass(getClass());
 	    job.setJobName(getClass().getSimpleName());
 	    
+	    
 	    //FileInputFormat.addInputPath(job, new Path(args[0]+"/"+args[5])); //new Path(args[0]+"/*nome_da_pasta" para que arquivos dentro de pastas tambem sejam lidos
 	    int anoIni = 0;
 	    int anoFim = Integer.parseInt(args[6]);
 	    for(anoIni = Integer.parseInt(args[5]); anoIni <= anoFim; anoIni++){
-	    	MultipleInputs.addInputPath(job, new Path(args[0]+"/"+anoIni), MyInputFormat.class, MediaMapper.class);
+	    	MultipleInputs.addInputPath(job, new Path(args[0]+"/"+anoIni), CombinedInputFormat.class, MediaMapper.class);
 	    }
 	    FileOutputFormat.setOutputPath(job, new Path(args[1]+"/"+args[2]));
 	    
 	    job.setMapperClass(MediaMapper.class);
-	    job.setCombinerClass(MediaReducer.class);
+	    //job.setCombinerClass(MediaReducer.class);
 	    job.setReducerClass(MediaReducer.class);
 
-	    /*
+	    
 	    job.setMapOutputKeyClass(Text.class);
-	    job.setMapOutputValueClass(CompositeWritable.class);
-	    */
+	    job.setMapOutputValueClass(DoubleWritable.class);
+	    
 	    job.setOutputKeyClass(Text.class);
 	    job.setOutputValueClass(CompositeWritable.class);
 	    
 	    //job.setInputFormatClass(SingleInputFormat.class);
+	    
+	    job.setNumReduceTasks(1);
 	    
 	    return job.waitForCompletion(true) ? 0 : 1;
 	}
@@ -66,41 +70,41 @@ public class AggregateJob extends Configured implements Tool {
 			entrada = scan.next();
 			params[0] = entrada;
 			
-			System.out.println("Digite a raiz da pasta onde deseja armazenar os dados: ");
+			System.out.println("\nDigite a raiz da pasta onde deseja armazenar os dados: ");
 			raizSaida = scan.next();
 			params[1] = raizSaida;
 			
 			while(true){
 				System.out.println("Digite qual dado deseja analisar. "
 						+ "\nOpcoes: "
-						+ "\nMedTemperatura = Temperatura media"
-						+ "\nMedCondensassao = Ponto medio de condensassao da agua"
-						+ "\nMedMar = Nivel do mar medio"
-						+ "\nMedPressao = Pressao media"
-						+ "\nMedVento = Velocidade do vento media"
-						+ "\nMaxVento = Velocidade maxima do vento"
-						+ "\nMaxRajada = Velocidade maxima das rajadas de vento"
-						+ "\nMaxTemperatura = Maximas da temperatura"
-						+ "\nMinTemperatura = Minimas da temperatura"
-						+ "\nPrecipitacao = Quantidade de precipitacao"
-						+ "\nNeve = Profundidade da neve"
+						+ "\n\tMedTemp = Temperatura media"
+						+ "\n\tMedCond = Ponto medio de condensassao da agua"
+						+ "\n\tMedMar = Nivel do mar medio"
+						+ "\n\tMedPressao = Pressao media"
+						+ "\n\tMedVento = Velocidade do vento media"
+						+ "\n\tMaxVento = Velocidade maxima do vento"
+						+ "\n\tMaxRajada = Velocidade maxima das rajadas de vento"
+						+ "\n\tMaxTemp = Maximas da temperatura"
+						+ "\n\tMinTemp = Minimas da temperatura"
+						+ "\n\tPrecip = Quantidade de precipitacao"
+						+ "\n\tNeve = Profundidade da neve"
 						+ "\n");
 				dado = scan.next();
 				
-				System.out.println("Digite sobre qual intervalo de anos deseja realizar a operacao: ");
-				System.out.println("Inicio: ");
+				System.out.println("\nDigite sobre qual intervalo de anos deseja realizar a operacao: ");
+				System.out.println("Inicio:");
 				anoIni = scan.next();
-				System.out.println("Fim: ");
+				System.out.println("\nFim:");
 				anoFim = scan.next();
 				
-				System.out.println("Digite como deseja agregar os dados"
+				System.out.println("\nDigite como deseja agregar os dados"
 						+ "\nOpcoes: "
-						+ "\nAno"
-						+ "\nMes"
-						+ "\nSemana: ");
+						+ "\n\tAno"
+						+ "\n\tMes"
+						+ "\n\tSemana");
 				agregador = scan.next();
 				
-				System.out.println("Digite o nome do arquivo de saida (nao repita nomes): ");
+				System.out.println("\nDigite o nome do arquivo de saida (nao repita nomes): \n");
 				pastaSaida = scan.next();
 				
 				params[2] = pastaSaida;

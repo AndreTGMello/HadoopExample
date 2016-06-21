@@ -7,12 +7,12 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
  
-public class MediaMapper extends Mapper<WordOffset, Text, Text, CompositeWritable> {
+public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 	private Text word = new Text();
-	private CompositeWritable count = null;
+	private DoubleWritable count = null;
 	
 	@Override
-	protected void map(WordOffset key, Text value, Context context) throws IOException, InterruptedException{
+	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
 		Configuration conf = context.getConfiguration();
 		String dado = conf.get("dado");
 		String agregador = conf.get("agregador");
@@ -26,7 +26,7 @@ public class MediaMapper extends Mapper<WordOffset, Text, Text, CompositeWritabl
 			fimAgregador = 18;
 		}
 		
-		if(dado.equals("Temperatura")){
+		if(dado.equals("MedTemp")){
 			iniDado = 24;
 			fimDado = 30;
 		}
@@ -49,9 +49,10 @@ public class MediaMapper extends Mapper<WordOffset, Text, Text, CompositeWritabl
 				}
 				iniDado++;
 			}
-			count = new CompositeWritable(Double.parseDouble(valor));
+			count = new DoubleWritable(Double.parseDouble(valor));
 			
 			try {
+				System.out.println(word+", "+count.get());
 				context.write(word, count);
 			} 
 			catch (NumberFormatException e) {
