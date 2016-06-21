@@ -1,38 +1,41 @@
 package mapreduce;
 
-import java.awt.Composite;
 import java.util.Scanner;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.DoubleWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.reduce.LongSumReducer;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 public class AggregateJob extends Configured implements Tool {
 	public int run(String[] args) throws Exception {
+		
 		Configuration conf = getConf();
 		conf.set("agregador", args[3]);
 		conf.set("dado", args[4]);
 		
+		//JobConf job = new JobConf(conf);
+		
 		Job job = Job.getInstance(conf);
-		//Job job = new Job(conf);
+		
 		job.setJarByClass(getClass());
 	    job.setJobName(getClass().getSimpleName());
 	    
-	    FileInputFormat.addInputPath(job, new Path(args[0]+"/"+args[5])); //new Path(args[0]+"/*nome_da_pasta" para que arquivos dentro de pastas tambem sejam lidos
+	    //FileInputFormat.addInputPath(job, new Path(args[0]+"/"+args[5])); //new Path(args[0]+"/*nome_da_pasta" para que arquivos dentro de pastas tambem sejam lidos
+	    int anoIni = 0;
+	    int anoFim = Integer.parseInt(args[6]);
+	    for(anoIni = Integer.parseInt(args[5]); anoIni <= anoFim; anoIni++){
+	    	MultipleInputs.addInputPath(job, new Path(args[0]+"/"+anoIni), SingleInputFormat.class, MediaMapper.class);
+	    }
 	    FileOutputFormat.setOutputPath(job, new Path(args[1]+"/"+args[2]));
 	    
 	    job.setMapperClass(MediaMapper.class);
-	    job.setCombinerClass(MediaCombiner.class);
+	    job.setCombinerClass(MediaReducer.class);
 	    job.setReducerClass(MediaReducer.class);
 
 	    /*
@@ -42,6 +45,7 @@ public class AggregateJob extends Configured implements Tool {
 	    job.setOutputKeyClass(Text.class);
 	    job.setOutputValueClass(CompositeWritable.class);
 	    
+	    job.setInputFormatClass(SingleInputFormat.class);
 	    
 	    return job.waitForCompletion(true) ? 0 : 1;
 	}
