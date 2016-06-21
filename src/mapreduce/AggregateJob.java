@@ -19,16 +19,16 @@ import org.apache.hadoop.util.ToolRunner;
 public class AggregateJob extends Configured implements Tool {
 	public int run(String[] args) throws Exception {
 		Configuration conf = getConf();
-		conf.set("dado", args[args.length-1]);
-		conf.set("agregador", args[args.length-2]);
+		conf.set("agregador", args[3]);
+		conf.set("dado", args[4]);
 		
 		Job job = Job.getInstance(conf);
 		//Job job = new Job(conf);
 		job.setJarByClass(getClass());
 	    job.setJobName(getClass().getSimpleName());
 	    
-	    FileInputFormat.addInputPath(job, new Path(args[0])); //new Path(args[0]+"/*nome_da_pasta" para que arquivos dentro de pastas tambem sejam lidos
-	    FileOutputFormat.setOutputPath(job, new Path(args[1]));
+	    FileInputFormat.addInputPath(job, new Path(args[0]+"/"+args[5])); //new Path(args[0]+"/*nome_da_pasta" para que arquivos dentro de pastas tambem sejam lidos
+	    FileOutputFormat.setOutputPath(job, new Path(args[1]+"/"+args[2]));
 	    
 	    job.setMapperClass(MediaMapper.class);
 	    job.setCombinerClass(MediaReducer.class);
@@ -47,7 +47,18 @@ public class AggregateJob extends Configured implements Tool {
 			String anoIni = null;
 			String anoFim = null;
 			String agregador = null; 
-			String saida = null;
+			String raizSaida = null;
+			String pastaSaida = null;
+			String entrada = null;
+			String[] params = new String[7];
+			
+			System.out.println("Digite a pasta onde se encontram os dados: ");
+			entrada = scan.next();
+			params[0] = entrada;
+			
+			System.out.println("Digite a raiz da pasta onde deseja armazenar os dados: ");
+			raizSaida = scan.next();
+			params[1] = raizSaida;
 			
 			while(true){
 				System.out.println("Digite qual dado deseja analisar. "
@@ -80,16 +91,18 @@ public class AggregateJob extends Configured implements Tool {
 				agregador = scan.next();
 				
 				System.out.println("Digite o nome do arquivo de saida (nao repita nomes): ");
-				saida = scan.next();
+				pastaSaida = scan.next();
 				
-				String[] argsAux = new String[args.length];
-				for (int i = 0; i < argsAux.length; i++) {
-					argsAux[i] = args[i];
-					
-				}
-				argsAux[argsAux.length-1] = dado;
-				argsAux[argsAux.length-2] = agregador;
-			    int rc = ToolRunner.run(new AggregateJob(), argsAux);
+				params[2] = pastaSaida;
+				params[3] = agregador;
+				params[4] = dado;
+				params[5] = anoIni;
+				params[6] = anoFim;
+				
+				
+				// Roda run() com a lista de argumentos passados na execucao do jar
+				// + argumentos obtidos interativamente atraves das perguntas acima.
+			    int rc = ToolRunner.run(new AggregateJob(), params);
 			    System.exit(rc);
 			}
 			
