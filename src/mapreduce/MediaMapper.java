@@ -52,7 +52,6 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 			count = new DoubleWritable(Double.parseDouble(valor));
 			
 			try {
-				System.out.println(word+", "+count.get());
 				context.write(word, count);
 			} 
 			catch (NumberFormatException e) {
