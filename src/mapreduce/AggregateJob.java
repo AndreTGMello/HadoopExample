@@ -1,5 +1,6 @@
 package mapreduce;
 
+import java.awt.Composite;
 import java.util.Scanner;
 
 import org.apache.hadoop.conf.Configuration;
@@ -34,8 +35,13 @@ public class AggregateJob extends Configured implements Tool {
 	    job.setCombinerClass(MediaReducer.class);
 	    job.setReducerClass(MediaReducer.class);
 
+	    
+	    job.setMapOutputKeyClass(Text.class);
+	    job.setMapOutputValueClass(CompositeWritable.class);
+	    
 	    job.setOutputKeyClass(Text.class);
 	    job.setOutputValueClass(CompositeWritable.class);
+	    
 	    
 	    return job.waitForCompletion(true) ? 0 : 1;
 	}

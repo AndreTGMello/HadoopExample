@@ -7,9 +7,9 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
  
-public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+public class MediaMapper extends Mapper<LongWritable, Text, Text, CompositeWritable> {
 	private Text word = new Text();
-	private DoubleWritable count = new DoubleWritable();
+	private CompositeWritable count = null;
 	
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
@@ -49,7 +49,7 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 				}
 				iniDado++;
 			}
-			count.set(Double.parseDouble(valor));
+			count = new CompositeWritable(Double.parseDouble(valor));
 			
 			try {
 				context.write(word, count);
