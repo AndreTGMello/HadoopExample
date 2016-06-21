@@ -1,5 +1,6 @@
 package mapreduce;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -12,6 +13,10 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 	
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
+		Configuration conf = context.getConfiguration();
+		String dado = conf.get("dado");
+		String agregador = conf.get("agregador");
+		
 		String balde = value.toString();
 		if(balde.charAt(0) != 'S'){
 			String texto = "";

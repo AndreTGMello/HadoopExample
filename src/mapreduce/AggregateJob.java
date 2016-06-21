@@ -19,6 +19,9 @@ import org.apache.hadoop.util.ToolRunner;
 public class AggregateJob extends Configured implements Tool {
 	public int run(String[] args) throws Exception {
 		Configuration conf = getConf();
+		conf.set("dado", args[args.length-1]);
+		conf.set("agregador", args[args.length-2]);
+		
 		Job job = Job.getInstance(conf);
 		//Job job = new Job(conf);
 		job.setJarByClass(getClass());
@@ -79,7 +82,14 @@ public class AggregateJob extends Configured implements Tool {
 				System.out.println("Digite o nome do arquivo de saida (nao repita nomes): ");
 				saida = scan.next();
 				
-			    int rc = ToolRunner.run(new AggregateJob(), args);
+				String[] argsAux = new String[args.length];
+				for (int i = 0; i < argsAux.length; i++) {
+					argsAux[i] = args[i];
+					
+				}
+				argsAux[argsAux.length-1] = dado;
+				argsAux[argsAux.length-2] = agregador;
+			    int rc = ToolRunner.run(new AggregateJob(), argsAux);
 			    System.exit(rc);
 			}
 			
