@@ -16,26 +16,41 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 		Configuration conf = context.getConfiguration();
 		String dado = conf.get("dado");
 		String agregador = conf.get("agregador");
+		int iniAgregador = 0;
+		int fimAgregador = 0;
+		int iniDado = 0;
+		int fimDado = 0;
+		
+		if(agregador.equals("Ano")){
+			iniAgregador = 15;
+			fimAgregador = 18;
+		}
+		
+		if(dado.equals("Temperatura")){
+			iniDado = 25;
+			fimDado = 30;
+		}
+		
 		
 		String balde = value.toString();
 		if(balde.charAt(0) != 'S'){
-			String texto = "";
-			int i = 0;
-			while(i < 6){
-				texto += balde.charAt(i);
-				i++;
-			}	
-			word.set(texto);
+			String valor = "";
 			
-			i= 24;
-			texto = "";
-			while(i < 30){
-				if(balde.charAt(i) != ' '){
-					texto += balde.charAt(i);
-				}
-				i++;
+			while(iniAgregador < fimAgregador){
+				valor += balde.charAt(iniAgregador);
+				iniAgregador++;
 			}	
-			count.set(Double.parseDouble(texto));
+			word.set(valor);
+			
+			valor = "";
+			while(iniDado < fimDado){
+				if(balde.charAt(iniDado) != ' '){
+					valor += balde.charAt(iniDado);
+				}
+				iniDado++;
+			}
+			count.set(Double.parseDouble(valor));
+			
 			try {
 				context.write(word, count);
 			} 
