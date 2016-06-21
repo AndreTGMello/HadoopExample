@@ -30,7 +30,7 @@ public class AggregateJob extends Configured implements Tool {
 	    int anoIni = 0;
 	    int anoFim = Integer.parseInt(args[6]);
 	    for(anoIni = Integer.parseInt(args[5]); anoIni <= anoFim; anoIni++){
-	    	MultipleInputs.addInputPath(job, new Path(args[0]+"/"+anoIni), SingleInputFormat.class, MediaMapper.class);
+	    	MultipleInputs.addInputPath(job, new Path(args[0]+"/"+anoIni), MyInputFormat.class, MediaMapper.class);
 	    }
 	    FileOutputFormat.setOutputPath(job, new Path(args[1]+"/"+args[2]));
 	    
@@ -45,7 +45,7 @@ public class AggregateJob extends Configured implements Tool {
 	    job.setOutputKeyClass(Text.class);
 	    job.setOutputValueClass(CompositeWritable.class);
 	    
-	    job.setInputFormatClass(SingleInputFormat.class);
+	    //job.setInputFormatClass(SingleInputFormat.class);
 	    
 	    return job.waitForCompletion(true) ? 0 : 1;
 	}

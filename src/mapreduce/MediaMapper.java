@@ -7,12 +7,12 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
  
-public class MediaMapper extends Mapper<LongWritable, Text, Text, CompositeWritable> {
+public class MediaMapper extends Mapper<WordOffset, Text, Text, CompositeWritable> {
 	private Text word = new Text();
 	private CompositeWritable count = null;
 	
 	@Override
-	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
+	protected void map(WordOffset key, Text value, Context context) throws IOException, InterruptedException{
 		Configuration conf = context.getConfiguration();
 		String dado = conf.get("dado");
 		String agregador = conf.get("agregador");
