@@ -2,11 +2,13 @@ package mapreduce;
 
 import java.util.Scanner;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -16,8 +18,10 @@ import org.apache.hadoop.util.ToolRunner;
 
 public class AggregateJob extends Configured implements Tool {
 	public int run(String[] args) throws Exception {
-		Job job = new Job(getConf());
-	    job.setJarByClass(getClass());
+		Configuration conf = getConf();
+		Job job = Job.getInstance(conf);
+		//Job job = new Job(conf);
+		job.setJarByClass(getClass());
 	    job.setJobName(getClass().getSimpleName());
 	    
 	    FileInputFormat.addInputPath(job, new Path(args[0])); //new Path(args[0]+"/*nome_da_pasta" para que arquivos dentro de pastas tambem sejam lidos
@@ -28,21 +32,22 @@ public class AggregateJob extends Configured implements Tool {
 	    job.setReducerClass(MediaReducer.class);
 
 	    job.setOutputKeyClass(Text.class);
-	    job.setOutputValueClass(DoubleWritable.class);
+	    job.setOutputValueClass(CompositeWritable.class);
 	    
 	    return job.waitForCompletion(true) ? 0 : 1;
-		}
+	}
+	
 		public static void main(String[] args) throws Exception {
 			Scanner scan = new Scanner(System.in);
 			
-			String info = null;
+			String dado = null;
 			String anoIni = null;
 			String anoFim = null;
 			String agregador = null; 
 			String saida = null;
 			
 			while(true){
-				System.out.println("Digite qual informacao deseja analisar. "
+				System.out.println("Digite qual dado deseja analisar. "
 						+ "\nOpcoes: "
 						+ "\nMedTemperatura = Temperatura media"
 						+ "\nMedCondensassao = Ponto medio de condensassao da agua"
@@ -56,7 +61,7 @@ public class AggregateJob extends Configured implements Tool {
 						+ "\nPrecipitacao = Quantidade de precipitacao"
 						+ "\nNeve = Profundidade da neve"
 						+ "\n");
-				info = scan.next();
+				dado = scan.next();
 				
 				System.out.println("Digite sobre qual intervalo de anos deseja realizar a operacao: ");
 				System.out.println("Inicio: ");
