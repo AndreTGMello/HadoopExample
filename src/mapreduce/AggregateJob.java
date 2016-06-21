@@ -32,13 +32,13 @@ public class AggregateJob extends Configured implements Tool {
 	    FileOutputFormat.setOutputPath(job, new Path(args[1]+"/"+args[2]));
 	    
 	    job.setMapperClass(MediaMapper.class);
-	    job.setCombinerClass(MediaReducer.class);
+	    job.setCombinerClass(MediaCombiner.class);
 	    job.setReducerClass(MediaReducer.class);
 
-	    
+	    /*
 	    job.setMapOutputKeyClass(Text.class);
 	    job.setMapOutputValueClass(CompositeWritable.class);
-	    
+	    */
 	    job.setOutputKeyClass(Text.class);
 	    job.setOutputValueClass(CompositeWritable.class);
 	    

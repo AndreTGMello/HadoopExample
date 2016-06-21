@@ -22,12 +22,12 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, CompositeWrita
 		int fimDado = 0;
 		
 		if(agregador.equals("Ano")){
-			iniAgregador = 15;
+			iniAgregador = 14;
 			fimAgregador = 18;
 		}
 		
 		if(dado.equals("Temperatura")){
-			iniDado = 25;
+			iniDado = 24;
 			fimDado = 30;
 		}
 		

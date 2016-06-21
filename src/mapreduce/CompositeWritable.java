@@ -51,7 +51,7 @@ public class CompositeWritable implements Writable {
     }
 
     public CompositeWritable(double media, double desvioPadrao, double variancia) {
-        this.media = media;
+    	this.media = media;
         this.desvioPadrao = desvioPadrao;
         this.variancia = variancia;
     } 
@@ -73,10 +73,9 @@ public class CompositeWritable implements Writable {
 
     public void merge(CompositeWritable other) {
     	this.valor += other.valor;
-/*		this.media += other.media;
+		this.media += other.media;
 		this.desvioPadrao += other.desvioPadrao;
 		this.variancia += other.variancia;
-*/
     }
 
     @Override

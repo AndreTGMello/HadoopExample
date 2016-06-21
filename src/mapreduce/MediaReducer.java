@@ -22,6 +22,7 @@ public class MediaReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY, Comp
 			n++;
 		}
 */
+		
 		for (CompositeWritable cw : values) {
 			soma += cw.getValor();
 			n++;
@@ -33,6 +34,8 @@ public class MediaReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY, Comp
 		}
 		variancia = variancia/(n-1);
 		desvioPadrao = Math.sqrt(variancia);
+		
+		System.out.println("Reducer: "+n+","+soma+","+media+","+variancia+","+desvioPadrao);
 		
 		resultSet = new CompositeWritable(media, variancia, desvioPadrao);
 		context.write(key, resultSet);
