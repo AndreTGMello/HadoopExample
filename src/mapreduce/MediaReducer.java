@@ -31,7 +31,6 @@ public class MediaReducer<KEY> extends Reducer<KEY, DoubleWritable, KEY, Composi
 		
 		// Utiliza cache pare iterar sobre os dados mais uma vez
 		for (Iterator<Double> iterator = cache.iterator(); iterator.hasNext();) {
-			System.out.println("AHH");
 			variancia += Math.pow((iterator.next()-media), 2);
 		}
 		

@@ -66,11 +66,11 @@ public class AggregateJob extends Configured implements Tool {
 			String entrada = null;
 			String[] params = new String[7];
 			
-			System.out.println("Digite a pasta onde se encontram os dados: ");
+			System.out.println("Digite o caminho para a pasta onde se encontram os dados: ");
 			entrada = scan.next();
 			params[0] = entrada;
 			
-			System.out.println("\nDigite a raiz da pasta onde deseja armazenar os dados: ");
+			System.out.println("\nDigite o caminho para a raiz da pasta onde deseja armazenar os dados: ");
 			raizSaida = scan.next();
 			params[1] = raizSaida;
 			
@@ -79,7 +79,7 @@ public class AggregateJob extends Configured implements Tool {
 						+ "\nOpcoes: "
 						+ "\n\tMedTemp = Temperatura media"
 						+ "\n\tMedCond = Ponto medio de condensassao da agua"
-						+ "\n\tMedMar = Nivel do mar medio"
+						+ "\n\tMedMar = Media da pressao a nivel do mar"
 						+ "\n\tMedPressao = Pressao media"
 						+ "\n\tMedVento = Velocidade do vento media"
 						+ "\n\tMaxVento = Velocidade maxima do vento"
@@ -104,7 +104,7 @@ public class AggregateJob extends Configured implements Tool {
 						+ "\n\tSemana");
 				agregador = scan.next();
 				
-				System.out.println("\nDigite o nome do arquivo de saida (nao repita nomes): \n");
+				System.out.println("\nDigite o nome da pasta do arquivo de saida (nao repita nomes): \n");
 				pastaSaida = scan.next();
 				
 				params[2] = pastaSaida;
