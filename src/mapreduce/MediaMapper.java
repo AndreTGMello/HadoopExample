@@ -6,6 +6,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Iterator;
  
 public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
@@ -91,9 +92,11 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 	}
 
 	private String preencheData(String agregador, String balde) {
+		DecimalFormat doisDigitos = new DecimalFormat("00");
 		int iniAgregador = 0;
 		int fimAgregador = 0;
 		String valor = "";
+		int numeroSemana = 0;
 				
 		if(agregador.equals("Ano")){
 			iniAgregador = 14;
@@ -118,6 +121,16 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 		if(agregador.equals("Mes")){
 			return preencheData("Ano", balde)+"-"+valor;
 		}
+		else if (agregador.equals("Semana")){
+			numeroSemana = 0;
+			if(Integer.parseInt(valor)%7 == 0)
+				numeroSemana = (int) Math.floor(Integer.parseInt(valor)/7);
+			else
+				numeroSemana = ((int) Math.floor(Integer.parseInt(valor)/7)) + 1;
+			
+			return preencheData("Mes",balde)+"-Semana "+doisDigitos.format(numeroSemana);
+		}
+		
 		
 		return valor;
 	}
