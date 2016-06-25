@@ -17,25 +17,8 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 		Configuration conf = context.getConfiguration();
 		String dado = conf.get("dado");
 		String agregador = conf.get("agregador");
-		int iniAgregador = 0;
-		int fimAgregador = 0;
 		int iniDado = 0;
 		int fimDado = 0;
-		
-		if(agregador.equals("Ano")){
-			iniAgregador = 14;
-			fimAgregador = 18;
-		}
-		
-		if(agregador.equals("Mes")){
-			iniAgregador = 18;
-			fimAgregador = 20;
-		}
-		
-		if(agregador.equals("Semana")){
-			iniAgregador = 20;
-			fimAgregador = 22;
-		}
 		
 		if(dado.equals("MedTemp")){
 			iniDado = 24;
@@ -85,11 +68,7 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 		String balde = value.toString();
 		if(balde.charAt(0) != 'S'){
 			String valor = "";
-			
-			while(iniAgregador < fimAgregador){
-				valor += balde.charAt(iniAgregador);
-				iniAgregador++;
-			}	
+			valor += preencheData(agregador, balde);
 			word.set(valor);
 			
 			valor = "";
@@ -109,6 +88,38 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 				
 			}
 		}
+	}
+
+	private String preencheData(String agregador, String balde) {
+		int iniAgregador = 0;
+		int fimAgregador = 0;
+		String valor = "";
+				
+		if(agregador.equals("Ano")){
+			iniAgregador = 14;
+			fimAgregador = 18;
+		}
+		
+		else if(agregador.equals("Mes")){
+			iniAgregador = 18;
+			fimAgregador = 20;
+		}
+		
+		else if(agregador.equals("Semana")){
+			iniAgregador = 20;
+			fimAgregador = 22;
+		}
+		
+		while(iniAgregador < fimAgregador){
+			valor += balde.charAt(iniAgregador);
+			iniAgregador++;
+		}
+		
+		if(agregador.equals("Mes")){
+			return preencheData("Ano", balde)+"-"+valor;
+		}
+		
+		return valor;
 	}
 
 	private boolean valorValido(String valor) {
