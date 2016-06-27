@@ -521,6 +521,10 @@ public class AggregateJob extends Configured implements Tool {
 		if(!args[8].equals("N")){
 			secondRun(args);	
 		}
+		Grafico.criaGrafico();
+		Scanner scan = new Scanner(System.in);
+		scan.next();
+		scan.close();
 		return 0;
 	}
 }
