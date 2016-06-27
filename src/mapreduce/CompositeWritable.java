@@ -170,11 +170,18 @@ public class CompositeWritable implements Writable{
 	@Override
 	public String toString() {
 		if(a != null & b != null){
-			return this.a + "\t" + this.b + "\t" + this.xMin + "\t" + this.xMax; 
+			double aDouble = this.a.get();
+			double bDouble = this.b.get();
+			double xMinDouble = this.xMin.get();
+			double xMaxDouble = this.xMax.get();
+			return aDouble + "\t" + bDouble + "\t" + xMinDouble + "\t" + xMaxDouble; 
 		}else{
 			DecimalFormat df = new DecimalFormat("#.#");
 			df.setRoundingMode(RoundingMode.CEILING);
-			return (df.format(this.media) + "\t" + df.format(this.desvioPadrao) + "\t" + df.format(this.variancia)).replace(',', '.');
+			double mediaDouble = this.media.get();
+			double desvioPadraoDouble = this.desvioPadrao.get();
+			double varianciaDouble = this.variancia.get();
+			return (df.format(mediaDouble) + "\t" + df.format(desvioPadraoDouble) + "\t" + df.format(varianciaDouble)).replace(',', '.');
 		}
 
 	}
