@@ -13,10 +13,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 
 public class CompositeWritable implements Writable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private DoubleWritable valor = null;
 	private DoubleWritable media = null;
 	private DoubleWritable desvioPadrao = null;
@@ -27,9 +23,87 @@ public class CompositeWritable implements Writable{
 	private DoubleWritable xMax = null;
 	private DoubleWritable a = null;
 	private DoubleWritable b = null;
-	// Flag false = escreve estatisticas
-	// Flag true = escreve reta
+	
+	
+	public DoubleWritable getValor() {
+		return valor;
+	}
 
+	public void setValor(DoubleWritable valor) {
+		this.valor = valor;
+	}
+
+	public DoubleWritable getMedia() {
+		return media;
+	}
+
+	public void setMedia(DoubleWritable media) {
+		this.media = media;
+	}
+
+	public DoubleWritable getDesvioPadrao() {
+		return desvioPadrao;
+	}
+
+	public void setDesvioPadrao(DoubleWritable desvioPadrao) {
+		this.desvioPadrao = desvioPadrao;
+	}
+
+	public DoubleWritable getVariancia() {
+		return variancia;
+	}
+
+	public void setVariancia(DoubleWritable variancia) {
+		this.variancia = variancia;
+	}
+
+	public Text getAgrupadorX() {
+		return agrupadorX;
+	}
+
+	public void setAgrupadorX(Text agrupadorX) {
+		this.agrupadorX = agrupadorX;
+	}
+
+	public DoubleWritable getEstatisticaY() {
+		return estatisticaY;
+	}
+
+	public void setEstatisticaY(DoubleWritable estatisticaY) {
+		this.estatisticaY = estatisticaY;
+	}
+
+	public DoubleWritable getxMin() {
+		return xMin;
+	}
+
+	public void setxMin(DoubleWritable xMin) {
+		this.xMin = xMin;
+	}
+
+	public DoubleWritable getxMax() {
+		return xMax;
+	}
+
+	public void setxMax(DoubleWritable xMax) {
+		this.xMax = xMax;
+	}
+
+	public DoubleWritable getA() {
+		return a;
+	}
+
+	public void setA(DoubleWritable a) {
+		this.a = a;
+	}
+
+	public DoubleWritable getB() {
+		return b;
+	}
+
+	public void setB(DoubleWritable b) {
+		this.b = b;
+	}
 
 	public CompositeWritable() {}
 

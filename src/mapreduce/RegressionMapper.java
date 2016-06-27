@@ -30,31 +30,39 @@ public class RegressionMapper extends Mapper<LongWritable, Text, Text, Composite
 		int iniEstat = 0;
 		int fimEstat = 0;
 		
-		if(estatistica.toLowerCase().equals("media")){
-			iniEstat = 5;
+		if(estatistica.equals("MEDIA")){
+			iniEstat = 4;
 			fimEstat = 9;
 		}
 		
-		if(balde.charAt(0) != 'S'){
+		if(!balde.isEmpty() && balde.charAt(0) != 'S'){
 			String valor = "";
 			
 			while(balde.charAt(iniChave) != '\t' && balde.charAt(iniChave) != ' '){
 				valor += balde.charAt(iniChave);
 				iniChave++;
 			}
+			System.out.println(valor);
 			x = valor;
 
 			valor = "";
 			while(iniEstat < fimEstat){
-				if(balde.charAt(iniChave) != '\t' && balde.charAt(iniChave) != ' '){
+				if(balde.charAt(iniEstat) != '\t' && balde.charAt(iniEstat) != ' '){
 					valor += balde.charAt(iniEstat);
 				}
 				iniEstat++;
 			}
+			System.out.println(valor);
 			y = Double.parseDouble(valor);
 			
+			Text xWritable = new Text();
+			xWritable.set(x);
+			
+			DoubleWritable yWritable = new DoubleWritable();
+			yWritable.set(y);
+			
 			try {
-				parXY = new CompositeWritable(x, y);
+				parXY = new CompositeWritable(xWritable, yWritable);
 				context.write(word, parXY);
 			} 
 			catch (NumberFormatException e) {
