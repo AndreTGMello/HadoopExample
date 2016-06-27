@@ -115,6 +115,9 @@ public class CompositeWritable implements Writable{
 		this.media = media;
 		this.desvioPadrao = desvioPadrao;
 		this.variancia = variancia;
+		System.out.println("Media: "+media+". this.media: "+this.media.get()+"\n"
+				+ "Desvio padrao: "+desvioPadrao+". this.desvioPadrao: "+this.desvioPadrao.get()+"\n"
+						+ "Variancia: "+variancia+". this.variancia: "+this.variancia.get()+"\n");
 	} 
 
 	public CompositeWritable(Text x, DoubleWritable y) {
@@ -179,8 +182,11 @@ public class CompositeWritable implements Writable{
 			DecimalFormat df = new DecimalFormat("#.#");
 			df.setRoundingMode(RoundingMode.CEILING);
 			double mediaDouble = this.media.get();
+			System.out.println("Composite media "+mediaDouble);
 			double desvioPadraoDouble = this.desvioPadrao.get();
+			System.out.println("Composite desvio padrao"+desvioPadraoDouble);
 			double varianciaDouble = this.variancia.get();
+			System.out.println("Composite variancia "+varianciaDouble);
 			return (df.format(mediaDouble) + "\t" + df.format(desvioPadraoDouble) + "\t" + df.format(varianciaDouble)).replace(',', '.');
 		}
 

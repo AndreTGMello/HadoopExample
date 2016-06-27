@@ -38,14 +38,17 @@ public class StatisticsReducer<KEY> extends Reducer<KEY, DoubleWritable, KEY, Co
 		
 		DoubleWritable mediaWritable = new DoubleWritable();
 		mediaWritable.set(media);
-		
-		DoubleWritable varianciaWritable = new DoubleWritable();
-		mediaWritable.set(variancia);
+		System.out.println("Media: "+mediaWritable);
 		
 		DoubleWritable desvioPadraoWritable = new DoubleWritable();
-		mediaWritable.set(desvioPadrao);
+		desvioPadraoWritable.set(desvioPadrao);
+		System.out.println("Desvio padrao: "+desvioPadraoWritable);
 		
-		resultSet = new CompositeWritable(mediaWritable, varianciaWritable, desvioPadraoWritable);
+		DoubleWritable varianciaWritable = new DoubleWritable();
+		varianciaWritable.set(variancia);
+		System.out.println("Variancia "+varianciaWritable);
+		
+		resultSet = new CompositeWritable(mediaWritable, desvioPadraoWritable, varianciaWritable);
 		context.write(key, resultSet);
   }
  
