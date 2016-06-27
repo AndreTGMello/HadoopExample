@@ -21,47 +21,47 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 		int iniDado = 0;
 		int fimDado = 0;
 		
-		if(dado.equals("MedTemp")){
+		if(dado.equals("MEDTEMP")){
 			iniDado = 24;
 			fimDado = 30;
 		}
-		if(dado.equals("MedCond")){
+		if(dado.equals("MEDCOND")){
 			iniDado = 35;
 			fimDado = 41;
 		}
-		if(dado.equals("MedMar")){
+		if(dado.equals("MEDMAR")){
 			iniDado = 46;
 			fimDado = 52;
 		}
-		if(dado.equals("MedPressao")){
+		if(dado.equals("MEDPRESSAO")){
 			iniDado = 57;
 			fimDado = 63;
 		}
-		if(dado.equals("MedVento")){
+		if(dado.equals("MEDVENTO")){
 			iniDado = 78;
 			fimDado = 83;
 		}
-		if(dado.equals("MaxVento")){
+		if(dado.equals("MAXVENTO")){
 			iniDado = 88;
 			fimDado = 93;
 		}
-		if(dado.equals("MaxRajada")){
+		if(dado.equals("MAXRAJADA")){
 			iniDado = 95;
 			fimDado = 100;
 		}
-		if(dado.equals("MaxTemp")){
+		if(dado.equals("MAXTEMP")){
 			iniDado = 102;
 			fimDado = 108;
 		}
-		if(dado.equals("MinTemp")){
+		if(dado.equals("MINTEMP")){
 			iniDado = 110;
 			fimDado = 116;
 		}
-		if(dado.equals("Precip")){
+		if(dado.equals("PRECIP")){
 			iniDado = 118;
 			fimDado = 123;
 		}
-		if(dado.equals("Neve")){
+		if(dado.equals("NEVE")){
 			iniDado = 125;
 			fimDado = 130;
 		}
@@ -98,17 +98,17 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 		String valor = "";
 		int numeroSemana = 0;
 				
-		if(agregador.equals("Ano")){
+		if(agregador.equals("ANO")){
 			iniAgregador = 14;
 			fimAgregador = 18;
 		}
 		
-		else if(agregador.equals("Mes")){
+		else if(agregador.equals("MES")){
 			iniAgregador = 18;
 			fimAgregador = 20;
 		}
 		
-		else if(agregador.equals("Semana")){
+		else if(agregador.equals("SEMANA")){
 			iniAgregador = 20;
 			fimAgregador = 22;
 		}
@@ -118,17 +118,17 @@ public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable
 			iniAgregador++;
 		}
 		
-		if(agregador.equals("Mes")){
-			return preencheData("Ano", balde)+"-"+valor;
+		if(agregador.equals("MES")){
+			return preencheData("ANO", balde)+"-"+valor;
 		}
-		else if (agregador.equals("Semana")){
+		else if (agregador.equals("SEMANA")){
 			numeroSemana = 0;
 			if(Integer.parseInt(valor)%7 == 0)
 				numeroSemana = (int) Math.floor(Integer.parseInt(valor)/7);
 			else
 				numeroSemana = ((int) Math.floor(Integer.parseInt(valor)/7)) + 1;
 			
-			return preencheData("Mes",balde)+"-Semana "+doisDigitos.format(numeroSemana);
+			return preencheData("MES",balde)+"-Semana "+doisDigitos.format(numeroSemana);
 		}
 		
 		
