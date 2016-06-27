@@ -15,7 +15,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 public class AggregateJob extends Configured implements Tool {
-	public int run(String[] args) throws Exception {
+	public int firstRun(String[] args) throws Exception {
 		
 		Configuration conf = getConf();
 		conf.set("agregador", args[3]);
@@ -36,6 +36,40 @@ public class AggregateJob extends Configured implements Tool {
 	    for(anoIni = Integer.parseInt(args[5]); anoIni <= anoFim; anoIni++){
 	    	MultipleInputs.addInputPath(job, new Path(args[0]+"/"+anoIni), CombinedInputFormat.class, MediaMapper.class);
 	    }
+	    FileOutputFormat.setOutputPath(job, new Path(args[1]+"/"+args[2]));
+	    
+	    job.setMapperClass(MediaMapper.class);
+	    //job.setCombinerClass(MediaReducer.class);
+	    job.setReducerClass(MediaReducer.class);
+
+	    
+	    job.setMapOutputKeyClass(Text.class);
+	    job.setMapOutputValueClass(DoubleWritable.class);
+	    
+	    job.setOutputKeyClass(Text.class);
+	    job.setOutputValueClass(CompositeWritable.class);
+	    
+	    //job.setInputFormatClass(SingleInputFormat.class);
+	    
+	    job.setNumReduceTasks(1);
+	    
+	    return job.waitForCompletion(true) ? 0 : 1;
+	}
+	
+	public int secondRun(String[] args) throws Exception {
+		
+		Configuration conf = getConf();
+		conf.set("agregador", args[3]);
+		conf.set("dado", args[4]);
+		
+		//JobConf job = new JobConf(conf);
+		
+		Job job = Job.getInstance(conf);
+		
+		job.setJarByClass(getClass());
+	    job.setJobName(getClass().getSimpleName());
+	    
+	    FileInputFormat.addInputPath(job, new Path(args[1]+"/"+args[2]));
 	    FileOutputFormat.setOutputPath(job, new Path(args[1]+"/"+args[2]));
 	    
 	    job.setMapperClass(MediaMapper.class);
