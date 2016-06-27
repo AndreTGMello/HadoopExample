@@ -75,9 +75,16 @@ public class CompositeWritable implements Writable, Serializable{
 	public CompositeWritable(String x, double y) {
 		this.estatisticaY = y;
 		this.agrupadorX = x;
-		this.flag = true;
 	} 
 
+	public CompositeWritable(double a, double b, double xMin, double xMax) {
+		this.a = a;
+		this.b = b;
+		this.xMin = xMin;
+		this.xMax = xMax;
+		this.flag = true;
+	}
+	
 	public void readFields(DataInput in) throws IOException {
 		valor = in.readInt();
 		media = in.readDouble();
