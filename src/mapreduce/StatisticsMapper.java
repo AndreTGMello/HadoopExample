@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Iterator;
  
-public class MediaMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+public class StatisticsMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 	private Text word = new Text();
 	private DoubleWritable count = null;
 	

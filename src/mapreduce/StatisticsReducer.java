@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.mapreduce.Reducer;
  
-public class MediaReducer<KEY> extends Reducer<KEY, DoubleWritable, KEY, CompositeWritable> {
+public class StatisticsReducer<KEY> extends Reducer<KEY, DoubleWritable, KEY, CompositeWritable> {
  
 	private CompositeWritable resultSet = null;
 	private List<Double> cache = new ArrayList<Double>();
