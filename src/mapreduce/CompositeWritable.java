@@ -3,6 +3,8 @@ package mapreduce;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.math.RoundingMode;
 
 import org.apache.hadoop.io.Writable;
 
@@ -11,7 +13,7 @@ public class CompositeWritable implements Writable {
 	double media = 0.0;
     double desvioPadrao = 0.0;
     double variancia = 0.0;
-
+    
     public double getValor() {
 		return valor;
 	}
@@ -80,6 +82,8 @@ public class CompositeWritable implements Writable {
 
     @Override
     public String toString() {
-        return this.media + "\t" + this.desvioPadrao + "\t" + this.variancia;
+    	DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.CEILING);
+        return df.format(this.media) + "\t" + df.format(this.desvioPadrao) + "\t" + df.format(this.variancia);
     }
 }
