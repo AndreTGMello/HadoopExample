@@ -106,7 +106,7 @@ public class CompositeWritable implements Writable, Serializable{
 		}else{
 			DecimalFormat df = new DecimalFormat("#.#");
 			df.setRoundingMode(RoundingMode.CEILING);
-			return df.format(this.media) + "\t" + df.format(this.desvioPadrao) + "\t" + df.format(this.variancia);
+			return (df.format(this.media) + "\t" + df.format(this.desvioPadrao) + "\t" + df.format(this.variancia)).replace(',', '.');
 		}
 
 	}
