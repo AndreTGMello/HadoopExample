@@ -13,16 +13,16 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 
 public class CompositeWritable implements Writable{
-	private DoubleWritable valor = null;
-	private DoubleWritable media = null;
-	private DoubleWritable desvioPadrao = null;
-	private DoubleWritable variancia = null;
-	private Text agrupadorX = null;
-	private DoubleWritable estatisticaY = null;
-	private DoubleWritable xMin = null;
-	private DoubleWritable xMax = null;
-	private DoubleWritable a = null;
-	private DoubleWritable b = null;
+	private DoubleWritable valor = new DoubleWritable();
+	private DoubleWritable media = new DoubleWritable();
+	private DoubleWritable desvioPadrao = new DoubleWritable();
+	private DoubleWritable variancia = new DoubleWritable();
+	private Text agrupadorX = new Text();
+	private DoubleWritable estatisticaY = new DoubleWritable();
+	private DoubleWritable xMin = new DoubleWritable();
+	private DoubleWritable xMax = new DoubleWritable();
+	private DoubleWritable a = new DoubleWritable();
+	private DoubleWritable b = new DoubleWritable();
 	
 	
 	public DoubleWritable getValor() {
@@ -172,7 +172,7 @@ public class CompositeWritable implements Writable{
 
 	@Override
 	public String toString() {
-		if(a != null & b != null){
+		if(a.get()!=0.0 && b.get()!=0.0){
 			double aDouble = this.a.get();
 			double bDouble = this.b.get();
 			double xMinDouble = this.xMin.get();

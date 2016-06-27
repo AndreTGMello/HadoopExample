@@ -55,6 +55,7 @@ public class RegressionReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY,
 		}
 		mediaY = somaY/n;
 		mediaX = somaX/n;
+		System.out.println("MediaX: "+mediaX+". MediaY: "+mediaY);
 		
 		for (Iterator<CompositeWritable> iterator = cache.iterator(); iterator.hasNext();) {
 			CompositeWritable aux = (CompositeWritable) iterator.next();
@@ -62,11 +63,15 @@ public class RegressionReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY,
 			DoubleWritable valorYWritable = aux.getEstatisticaY();
 			double valorY = valorYWritable.get();
 			
+			
+			// ATENCAO
 			Text valorXWritable = aux.getAgrupadorX();
-			int valorX = Integer.parseInt(valorXWritable.toString());
+			double valorX = Double.parseDouble(valorXWritable.toString());
 			
 			bNumerador += (valorX*(valorY-mediaY));
+			System.out.println("bNumerador: "+bNumerador);
 			bDenominador += (valorX*(valorX-mediaX));
+			System.out.println("bDenominador: "+bDenominador);
 		}
 		b = bNumerador/bDenominador;
 		a = mediaY - b*mediaX;

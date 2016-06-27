@@ -17,7 +17,7 @@ public class RegressionMapper extends Mapper<LongWritable, Text, Text, Composite
 	
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
-		word.set("GROUP");
+		word.set("FUNCTION");
 		Configuration conf = context.getConfiguration();
 		String estatistica = conf.get("estatistica");
 		String x = "";
@@ -61,6 +61,7 @@ public class RegressionMapper extends Mapper<LongWritable, Text, Text, Composite
 			DoubleWritable yWritable = new DoubleWritable();
 			yWritable.set(y);
 			
+			System.out.println("X: "+xWritable+" Y: "+yWritable);
 			try {
 				parXY = new CompositeWritable(xWritable, yWritable);
 				context.write(word, parXY);
