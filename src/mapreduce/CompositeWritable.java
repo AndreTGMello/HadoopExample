@@ -59,6 +59,63 @@ public class CompositeWritable implements Writable, Serializable{
 	public void setVariancia(double variancia) {
 		this.variancia = variancia;
 	}
+	
+	public String getAgrupadorX() {
+		return agrupadorX;
+	}
+
+	public void setAgrupadorX(String agrupadorX) {
+		this.agrupadorX = agrupadorX;
+	}
+
+	public double getEstatisticaY() {
+		return estatisticaY;
+	}
+
+	public void setEstatisticaY(double estatisticaY) {
+		this.estatisticaY = estatisticaY;
+	}
+
+	public double getxMin() {
+		return xMin;
+	}
+
+	public void setxMin(double xMin) {
+		this.xMin = xMin;
+	}
+
+	public double getxMax() {
+		return xMax;
+	}
+
+	public void setxMax(double xMax) {
+		this.xMax = xMax;
+	}
+
+	public double getA() {
+		return a;
+	}
+
+	public void setA(double a) {
+		this.a = a;
+	}
+
+	public double getB() {
+		return b;
+	}
+
+	public void setB(double b) {
+		this.b = b;
+	}
+
+	public boolean isFlag() {
+		return flag;
+	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+
 
 	public CompositeWritable() {}
 
