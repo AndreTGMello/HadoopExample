@@ -20,6 +20,8 @@ public class RegressionReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY,
 		double variancia = 0.0;
 		double mediaX = 0.0;
 		double mediaY = 0.0;
+		
+		//((Iterator<CompositeWritable>) values).forEachRemaining(cache::add);
 
 		for (CompositeWritable compositeWritable : values) {
 			
