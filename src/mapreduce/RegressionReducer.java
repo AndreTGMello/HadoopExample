@@ -9,24 +9,28 @@ import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Reducer.Context;
 
-public class RegressionReducer<KEY> extends Reducer<KEY, DoubleWritable, KEY, CompositeWritable> {
+public class RegressionReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY, CompositeWritable> {
 	private CompositeWritable resultSet = null;
-	private List<Double> cache = new ArrayList<Double>();
+	private List<CompositeWritable> cache = new ArrayList<CompositeWritable>();
 	
-	public void reduce(KEY key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
+	public void reduce(KEY key, Iterable<CompositeWritable> values, Context context) throws IOException, InterruptedException {
 		int n = 0;
-		double soma = 0.0;
+		double somaX = 0.0;
+		double somaY = 0.0;
 		double variancia = 0.0;
-		double media = 0.0;
-		double desvioPadrao = 0.0;
+		double mediaX = 0.0;
+		double mediaY = 0.0;
 
-		for (Iterator<DoubleWritable> iterator = values.iterator(); iterator.hasNext();) {
-			double valor = iterator.next().get();
-			soma += valor;
+		for (CompositeWritable compositeWritable : values) {
+			
+		}
+		for (Iterator<CompositeWritable> iterator = values.iterator(); iterator.hasNext();) {
+			double valorY = iterator.next().getEstatisticaY();
+			somaY += valorY;
 			n++;
 			// Cria cache pois nao e possivel iterar novamente
-			cache.add(valor);
+			//cache.add(valorY);
 		}
-		media = soma/n;
+		mediaY = somaY/n;
 	}
 }

@@ -11,26 +11,28 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.util.Tool;
 
-public class RegressionMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+public class RegressionMapper extends Mapper<LongWritable, Text, Text, CompositeWritable> {
 	private Text word = new Text();
-	private DoubleWritable count = null;
+	private CompositeWritable parXY = null;
 	
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
+		word.set("GROUP");
 		Configuration conf = context.getConfiguration();
 		String estatistica = conf.get("estatistica");
+		String x = "";
+		double y = 0.0;
 		
 		int iniChave = 0;
 		
 		String balde = value.toString();
 		
-		
 		int iniEstat = 0;
 		int fimEstat = 0;
 		
 		if(estatistica.toLowerCase().equals("media")){
-			iniEstat = 4;
-			fimEstat = 8;
+			iniEstat = 5;
+			fimEstat = 9;
 		}
 		
 		if(balde.charAt(0) != 'S'){
@@ -40,7 +42,7 @@ public class RegressionMapper extends Mapper<LongWritable, Text, Text, DoubleWri
 				valor += balde.charAt(iniChave);
 				iniChave++;
 			}
-			word.set(valor);
+			x = valor;
 
 			valor = "";
 			while(iniEstat < fimEstat){
@@ -49,9 +51,11 @@ public class RegressionMapper extends Mapper<LongWritable, Text, Text, DoubleWri
 				}
 				iniEstat++;
 			}
+			y = Double.parseDouble(valor);
+			
 			try {
-				count = new DoubleWritable(Double.parseDouble(valor));
-				context.write(word, count);
+				parXY = new CompositeWritable(x, y);
+				context.write(word, parXY);
 			} 
 			catch (NumberFormatException e) {
 			}
