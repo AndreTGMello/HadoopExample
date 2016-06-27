@@ -7,165 +7,95 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.math.RoundingMode;
 
+import org.apache.hadoop.io.BooleanWritable;
+import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 
-public class CompositeWritable implements Writable, Serializable{
+public class CompositeWritable implements Writable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3820756035070415554L;
-	private double valor = 0.0;
-	private double media = 0.0;
-	private double desvioPadrao = 0.0;
-	private double variancia = 0.0;
-	private String agrupadorX = "";
-	private double estatisticaY = 0.0;
-	private double xMin = 0.0;
-	private double xMax = 0.0;
-	private double a = 0.0;
-	private double b = 0.0;
-	private boolean flag = false;
+	private static final long serialVersionUID = 1L;
+	private DoubleWritable valor = null;
+	private DoubleWritable media = null;
+	private DoubleWritable desvioPadrao = null;
+	private DoubleWritable variancia = null;
+	private Text agrupadorX = null;
+	private DoubleWritable estatisticaY = null;
+	private DoubleWritable xMin = null;
+	private DoubleWritable xMax = null;
+	private DoubleWritable a = null;
+	private DoubleWritable b = null;
 	// Flag false = escreve estatisticas
 	// Flag true = escreve reta
-
-	public double getValor() {
-		return valor;
-	}
-
-	public void setValor(double valor) {
-		this.valor = valor;
-	}
-
-	public double getMedia() {
-		return media;
-	}
-
-	public void setMedia(double media) {
-		this.media = media;
-	}
-
-	public double getDesvioPadrao() {
-		return desvioPadrao;
-	}
-
-	public void setDesvioPadrao(double desvioPadrao) {
-		this.desvioPadrao = desvioPadrao;
-	}
-
-	public double getVariancia() {
-		return variancia;
-	}
-
-	public void setVariancia(double variancia) {
-		this.variancia = variancia;
-	}
-	
-	public String getAgrupadorX() {
-		return agrupadorX;
-	}
-
-	public void setAgrupadorX(String agrupadorX) {
-		this.agrupadorX = agrupadorX;
-	}
-
-	public double getEstatisticaY() {
-		return estatisticaY;
-	}
-
-	public void setEstatisticaY(double estatisticaY) {
-		this.estatisticaY = estatisticaY;
-	}
-
-	public double getxMin() {
-		return xMin;
-	}
-
-	public void setxMin(double xMin) {
-		this.xMin = xMin;
-	}
-
-	public double getxMax() {
-		return xMax;
-	}
-
-	public void setxMax(double xMax) {
-		this.xMax = xMax;
-	}
-
-	public double getA() {
-		return a;
-	}
-
-	public void setA(double a) {
-		this.a = a;
-	}
-
-	public double getB() {
-		return b;
-	}
-
-	public void setB(double b) {
-		this.b = b;
-	}
-
-	public boolean isFlag() {
-		return flag;
-	}
-
-	public void setFlag(boolean flag) {
-		this.flag = flag;
-	}
 
 
 	public CompositeWritable() {}
 
-	public CompositeWritable(double valor) {
+	public CompositeWritable(DoubleWritable valor) {
 		this.valor = valor;
 	}
 
-	public CompositeWritable(double media, double desvioPadrao, double variancia) {
+	public CompositeWritable(DoubleWritable media, DoubleWritable desvioPadrao, DoubleWritable variancia) {
 		this.media = media;
 		this.desvioPadrao = desvioPadrao;
 		this.variancia = variancia;
 	} 
 
-	public CompositeWritable(String x, double y) {
+	public CompositeWritable(Text x, DoubleWritable y) {
 		this.estatisticaY = y;
 		this.agrupadorX = x;
 	} 
 
-	public CompositeWritable(double a, double b, double xMin, double xMax) {
+	public CompositeWritable(DoubleWritable a, DoubleWritable b, DoubleWritable xMin, DoubleWritable xMax) {
 		this.a = a;
 		this.b = b;
 		this.xMin = xMin;
 		this.xMax = xMax;
-		this.flag = true;
 	}
 	
+	
 	public void readFields(DataInput in) throws IOException {
-		valor = in.readInt();
-		media = in.readDouble();
-		desvioPadrao = in.readDouble();
-		variancia = in.readDouble();
+		valor.readFields(in);
+		media.readFields(in);
+		desvioPadrao.readFields(in);
+		variancia.readFields(in);
+		
+		agrupadorX.readFields(in);
+		estatisticaY.readFields(in);
+		xMin.readFields(in);
+		xMax.readFields(in);
+		a.readFields(in);
+		b.readFields(in);
 	}
 
 	public void write(DataOutput out) throws IOException {
-		out.writeDouble(valor);
-		out.writeDouble(media);
-		out.writeDouble(desvioPadrao);
-		out.writeDouble(variancia);
+		valor.write(out);
+		media.write(out);
+		desvioPadrao.write(out);
+		variancia.write(out);
+		
+		agrupadorX.write(out);
+		estatisticaY.write(out);
+		xMin.write(out);
+		xMax.write(out);
+		a.write(out);
+		b.write(out);
 	}
-
+	
+	/*
 	public void merge(CompositeWritable other) {
 		this.valor += other.valor;
 		this.media += other.media;
 		this.desvioPadrao += other.desvioPadrao;
 		this.variancia += other.variancia;
 	}
+	*/
 
 	@Override
 	public String toString() {
-		if(flag){
+		if(a != null & b != null){
 			return this.a + "\t" + this.b + "\t" + this.xMin + "\t" + this.xMax; 
 		}else{
 			DecimalFormat df = new DecimalFormat("#.#");

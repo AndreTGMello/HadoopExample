@@ -34,9 +34,18 @@ public class StatisticsReducer<KEY> extends Reducer<KEY, DoubleWritable, KEY, Co
 			variancia += Math.pow((iterator.next()-media), 2);
 		}
 		
+		DoubleWritable mediaWritable = new DoubleWritable();
+		mediaWritable.set(media);
+		
+		DoubleWritable varianciaWritable = new DoubleWritable();
+		mediaWritable.set(variancia);
+		
+		DoubleWritable desvioPadraoWritable = new DoubleWritable();
+		mediaWritable.set(desvioPadrao);
+		
 		variancia = variancia/(n-1);
 		desvioPadrao = Math.sqrt(variancia);
-		resultSet = new CompositeWritable(media, variancia, desvioPadrao);
+		resultSet = new CompositeWritable(mediaWritable, varianciaWritable, desvioPadraoWritable);
 		context.write(key, resultSet);
   }
  
