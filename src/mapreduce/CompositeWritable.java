@@ -12,7 +12,7 @@ import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 
-public class CompositeWritable implements Writable{
+public class CompositeWritable implements Writable, Comparable<CompositeWritable>{
 	private DoubleWritable valor = new DoubleWritable();
 	private DoubleWritable media = new DoubleWritable();
 	private DoubleWritable desvioPadrao = new DoubleWritable();
@@ -190,5 +190,41 @@ public class CompositeWritable implements Writable{
 			return (df.format(mediaDouble) + "\t" + df.format(desvioPadraoDouble) + "\t" + df.format(varianciaDouble)).replace(',', '.');
 		}
 
+	}
+
+	public int compareTo(CompositeWritable o) {
+		int diff = Integer.MAX_VALUE;
+		int esseX = 0;
+		int outroX = 0;
+		String esseXString = this.agrupadorX.toString();
+		String outroXString = o.getAgrupadorX().toString();
+		try {
+			esseX = Integer.parseInt(esseXString);
+			outroX = Integer.parseInt(outroXString);
+			diff = esseX - outroX;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// Parse Int funcionara para mes e ano:
+		if(diff!=Integer.MAX_VALUE){
+			return diff;
+		}
+		// Caso especial: semanas
+		else{
+			String[] esseXArray = esseXString.split("-");
+			String[] outroXArray = outroXString.split("-");
+			int diffAno = Integer.parseInt(esseXArray[0]) - Integer.parseInt(outroXArray[0]);
+			int diffMes = Integer.parseInt(esseXArray[1]) - Integer.parseInt(outroXArray[1]);
+			int diffSemana = Integer.parseInt(esseXArray[2]) - Integer.parseInt(outroXArray[2]);
+			
+			if(diffAno!=0){
+				return diffAno;
+			}else if(diffMes!=0){
+				return diffMes;
+			}else if(diffSemana!=0){
+				return diffSemana;
+			}
+		}
+		return 0;
 	}
 }
