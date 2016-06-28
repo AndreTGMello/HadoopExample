@@ -180,7 +180,7 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 			double bDouble = this.b.get();
 			int xMinDouble = this.xMin.get();
 			int xMaxDouble = this.xMax.get();
-			return df.format(aDouble) + "\t\t" + df.format(bDouble) + "\t\t" + xMinDouble + "\t\t" + xMaxDouble; 
+			return (df.format(aDouble) + "\t\t" + df.format(bDouble) + "\t\t" + xMinDouble + "\t\t" + xMaxDouble).replace(',', '.'); 
 		}else{
 			DecimalFormat df = new DecimalFormat("#.#");
 			df.setRoundingMode(RoundingMode.CEILING);
