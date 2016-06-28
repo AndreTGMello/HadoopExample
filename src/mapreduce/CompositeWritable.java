@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 
@@ -19,8 +20,8 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 	private DoubleWritable variancia = new DoubleWritable();
 	private Text agrupadorX = new Text();
 	private DoubleWritable estatisticaY = new DoubleWritable();
-	private DoubleWritable xMin = new DoubleWritable();
-	private DoubleWritable xMax = new DoubleWritable();
+	private IntWritable xMin = new IntWritable();
+	private IntWritable xMax = new IntWritable();
 	private DoubleWritable a = new DoubleWritable();
 	private DoubleWritable b = new DoubleWritable();
 	
@@ -73,19 +74,19 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 		this.estatisticaY = estatisticaY;
 	}
 
-	public DoubleWritable getxMin() {
+	public IntWritable getxMin() {
 		return xMin;
 	}
 
-	public void setxMin(DoubleWritable xMin) {
+	public void setxMin(IntWritable xMin) {
 		this.xMin = xMin;
 	}
 
-	public DoubleWritable getxMax() {
+	public IntWritable getxMax() {
 		return xMax;
 	}
 
-	public void setxMax(DoubleWritable xMax) {
+	public void setxMax(IntWritable xMax) {
 		this.xMax = xMax;
 	}
 
@@ -125,7 +126,7 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 		this.agrupadorX = x;
 	} 
 
-	public CompositeWritable(DoubleWritable a, DoubleWritable b, DoubleWritable xMin, DoubleWritable xMax) {
+	public CompositeWritable(DoubleWritable a, DoubleWritable b, IntWritable xMin, IntWritable xMax) {
 		this.a = a;
 		this.b = b;
 		this.xMin = xMin;
@@ -173,11 +174,13 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 	@Override
 	public String toString() {
 		if(a.get()!=0.0 && b.get()!=0.0){
+			DecimalFormat df = new DecimalFormat("#.##");
+			df.setRoundingMode(RoundingMode.CEILING);
 			double aDouble = this.a.get();
 			double bDouble = this.b.get();
-			double xMinDouble = this.xMin.get();
-			double xMaxDouble = this.xMax.get();
-			return aDouble + "\t" + bDouble + "\t" + xMinDouble + "\t" + xMaxDouble; 
+			int xMinDouble = this.xMin.get();
+			int xMaxDouble = this.xMax.get();
+			return df.format(aDouble) + "\t\t" + df.format(bDouble) + "\t\t" + xMinDouble + "\t\t" + xMaxDouble; 
 		}else{
 			DecimalFormat df = new DecimalFormat("#.#");
 			df.setRoundingMode(RoundingMode.CEILING);
@@ -187,7 +190,7 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 			System.out.println("Composite desvio padrao"+desvioPadraoDouble);
 			double varianciaDouble = this.variancia.get();
 			System.out.println("Composite variancia "+varianciaDouble);
-			return (df.format(mediaDouble) + "\t" + df.format(desvioPadraoDouble) + "\t" + df.format(varianciaDouble)).replace(',', '.');
+			return (df.format(mediaDouble) + "\t\t" + df.format(desvioPadraoDouble) + "\t\t" + df.format(varianciaDouble)).replace(',', '.');
 		}
 
 	}
