@@ -33,9 +33,21 @@ public class Grafico extends ApplicationFrame {
     
     private DefaultCategoryDataset createDataset() throws FileNotFoundException {
     	final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        String moldeArquivo = "part-r-00000"; //permitir mais depois
-        File f = new File(caminhoPrimeiraSaida+"/"+moldeArquivo);
-        Scanner scan = new Scanner(f);
+    	String moldeArquivo = "part-r-00000"; //permitir mais depois
+    	File f = new File(caminhoSegundaSaida+"/"+moldeArquivo);
+    	Scanner scan = new Scanner(f);
+    	double a = 0.0;
+    	double b = 0.0;
+    	int anoIniBalde = 0; 
+    	//String anoIni = "";
+    	double resultadofuncao = 0.0;
+    	scan.next();
+    	a = Double.parseDouble(scan.next());
+    	b = Double.parseDouble(scan.next());
+    	anoIniBalde = (int) (Double.parseDouble(scan.next()));//para tirar a casa decimal do ano
+    	scan.close();
+        f = new File(caminhoPrimeiraSaida+"/"+moldeArquivo);
+        scan = new Scanner(f);
     	String x = "";
     	double y = 0;
     	int indiceEstatistica = 0;
@@ -45,24 +57,41 @@ public class Grafico extends ApplicationFrame {
     		indiceEstatistica = 2;
     	else if(estatistica.equals("VARIANCIA"))//CONFIRMAR RS
     		indiceEstatistica = 3;
+    	int indiceRegressao = 0;
     		
-    	while(scan.hasNext()){
+    	while(scan.hasNext()){//faz primeira reta
+    		
     		x = scan.next();
-    		int a = 0;
-    		for(a = 0; a < indiceEstatistica; a++)
+    		int z = 0;
+    		for(z = 0; z < indiceEstatistica; z++)
     		{
     			y = Double.parseDouble(scan.next());
     		}
-    		for(; a < 3; a++)
+    		for(; z < 3; z++)
     		{
     			scan.next();
     		}
     		dataset.addValue(y, "valor estatistica", x);
+    		resultadofuncao = a + b*indiceRegressao;
+    		dataset.addValue(resultadofuncao, "previsao", x);
+    		indiceRegressao++;
     		
     	}
-        
-        
-        scan.close(); 
+    	for(int h = 0; h < 10; h++){
+    		resultadofuncao = a + b*indiceRegressao;
+        	dataset.addValue(resultadofuncao, "previsao", "P"+Integer.toString(h));
+        	indiceRegressao++;
+    	}
+    	
+    	//faz segunda reta?
+    	//faz terceira reta
+    	scan.close();
+    	
+    	//anoIni = Integer.toString(anoIniBalde);
+    	/*for(int ano = anoIniBalde; ano < anoIniBalde+20; ano++){
+    		resultadofuncao = a + b*ano;
+    		dataset.addValue(resultadofuncao, "previsao", Integer.toString(ano));
+    	}*/
         return dataset;
         
     }
