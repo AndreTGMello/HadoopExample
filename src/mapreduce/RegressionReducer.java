@@ -2,6 +2,7 @@ package mapreduce;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,20 +30,27 @@ public class RegressionReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY,
 		double xMax = 0.0;
 		
 		for (Iterator<CompositeWritable> iterator = values.iterator(); iterator.hasNext();) {
-			CompositeWritable aux = iterator.next();
-			
-			DoubleWritable valorYWritable = aux.getEstatisticaY();
+			CompositeWritable temp = iterator.next();
+			cache.add(temp);
+		}
+		// Utiliza o metodo compareTo implementado em CompositeWritable
+		Collections.sort(cache);
+		
+		for (int i = 0; i < cache.size(); i++) {
+			CompositeWritable cw = cache.get(i);
+			DoubleWritable valorYWritable = cw.getEstatisticaY();
 			double valorY = valorYWritable.get();
-			
-			System.out.println("\n\tOY"+valorY+"\n");
 			somaY += valorY;
 			
-			Text valorXWritable = aux.getAgrupadorX();
-			int valorX = Integer.parseInt(valorXWritable.toString());
-			
-			System.out.println("\n\tOX"+valorX+"\n");
-			
+			int valorX = i;
 			somaX += valorX;
+			
+			System.out.println("\tValor Y: "+valorY+"\n");
+			System.out.println("\tValor X: "+valorX+"\n");
+			System.out.println("\tValor X real: "+cw.getAgrupadorX().toString()+"\n");
+			System.out.println("\tSomaX: "+somaX+"\n");
+			System.out.println("\tSomaY: "+somaY+"\n");
+			
 			n++;
 			if(valorX < xMin){
 				xMin = valorX;
@@ -50,28 +58,28 @@ public class RegressionReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY,
 			if(valorX > xMax){
 				xMax = valorX;
 			}
-			// Cria cache pois nao e possivel iterar novamente
-			cache.add(aux);
 		}
 		mediaY = somaY/n;
 		mediaX = somaX/n;
 		System.out.println("MediaX: "+mediaX+". MediaY: "+mediaY);
 		
-		for (Iterator<CompositeWritable> iterator = cache.iterator(); iterator.hasNext();) {
-			CompositeWritable aux = (CompositeWritable) iterator.next();
+		for (int i = 0; i < cache.size(); i++) {
+			CompositeWritable cw = cache.get(i);
 			
-			DoubleWritable valorYWritable = aux.getEstatisticaY();
+			DoubleWritable valorYWritable = cw.getEstatisticaY();
 			double valorY = valorYWritable.get();
 			
-			
-			// ATENCAO
-			Text valorXWritable = aux.getAgrupadorX();
-			double valorX = Double.parseDouble(valorXWritable.toString());
+			int valorX = i;
 			
 			bNumerador += (valorX*(valorY-mediaY));
-			System.out.println("bNumerador: "+bNumerador);
 			bDenominador += (valorX*(valorX-mediaX));
+			
+			System.out.println("\tValor Y: "+valorY+"\n");			
+			System.out.println("\tValor X: "+valorX+"\n");
+			System.out.println("\tValor X real: "+cw.getAgrupadorX().toString()+"\n");
+			System.out.println("bNumerador: "+bNumerador);
 			System.out.println("bDenominador: "+bDenominador);
+			
 		}
 		b = bNumerador/bDenominador;
 		a = mediaY - b*mediaX;
