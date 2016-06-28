@@ -42,6 +42,8 @@ public class Grafico extends ApplicationFrame {
         int baldeCategoria = 1;
         double proporcaoD = (categorias.size()+10)/41; 
         int proporcao = (int) proporcaoD;
+        if(proporcao == 0)
+        	proporcao = 1;
         int indiceCategoria = 0;
         for(; indiceCategoria < categorias.size(); indiceCategoria++)
         {

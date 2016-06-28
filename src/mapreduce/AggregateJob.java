@@ -494,7 +494,10 @@ public class AggregateJob extends Configured implements Tool {
 					+ "\n\tDesvioPadrao"
 					+ "\n\tVariancia");
 			estatistica = scan.next().toUpperCase();
-			tratamento = true;
+			if(estatistica.equals("MEDIA") || estatistica.equals("DESVIOPADRAO") || estatistica.equals("VARIANCIA") || estatistica.equals("N"))
+				tratamento = true;
+			else
+				System.out.println("Opcao invalida, tente novamente!");
 		}
 
 		params[2] = pastaSaida;
@@ -521,10 +524,18 @@ public class AggregateJob extends Configured implements Tool {
 		if(!args[8].equals("N")){
 			secondRun(args);	
 		}
-		Grafico.criaGrafico(args[1], args[2], args[8]);
-		Scanner scan = new Scanner(System.in);
-		scan.next();
-		scan.close();
+		try{
+			Grafico.criaGrafico(args[1], args[2], args[8]);
+			Scanner scan = new Scanner(System.in);
+			scan.next();
+			scan.close();
+			System.out.println("Execucao concluida com sucesso! \nFeche o grafico para encerrar o programa!");
+		}
+		catch(Exception e)
+		{
+			System.out.println("Nao ha dados na selecao escolhida o suficiente para gerar a regressao, tente novamente com outras opcoes!");
+			System.exit(0);
+		}
 		return 0;
 	}
 }
