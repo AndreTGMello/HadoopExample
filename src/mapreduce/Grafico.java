@@ -1,6 +1,9 @@
 package mapreduce;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -9,6 +12,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -16,57 +20,59 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
 public class Grafico extends ApplicationFrame {
-    public Grafico(final String title) {
+	public static String caminhoPrimeiraSaida = "";
+	public static String caminhoSegundaSaida = "";
+	public static String estatistica = "";
+    public Grafico(final String title) throws FileNotFoundException {
         super(title);
-        final XYDataset dataset = createDataset();
-        final JFreeChart chart = createChart(dataset);
+        final JFreeChart chart = ChartFactory.createLineChart("Grafico", "Periodo", "Estatistica", createDataset(), PlotOrientation.VERTICAL, true, true, false);
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         setContentPane(chartPanel);
-
     }
     
-    /**
-     * Creates a sample dataset.
-     * 
-     * @return a sample dataset.
-     */
-    private XYDataset createDataset() {
+    private DefaultCategoryDataset createDataset() throws FileNotFoundException {
+    	final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        String moldeArquivo = "part-r-00000"; //permitir mais depois
+        File f = new File(caminhoPrimeiraSaida+"/"+moldeArquivo);
+        Scanner scan = new Scanner(f);
+    	String x = "";
+    	double y = 0;
+    	int indiceEstatistica = 0;
+    	if(estatistica.equals("MEDIA"))
+    		indiceEstatistica = 1;
+    	else if (estatistica.equals("DESVIOPADRAO"))
+    		indiceEstatistica = 2;
+    	else if(estatistica.equals("VARIANCIA"))//CONFIRMAR RS
+    		indiceEstatistica = 3;
+    		
+    	while(scan.hasNext()){
+    		x = scan.next();
+    		int a = 0;
+    		for(a = 0; a < indiceEstatistica; a++)
+    		{
+    			y = Double.parseDouble(scan.next());
+    		}
+    		for(; a < 3; a++)
+    		{
+    			scan.next();
+    		}
+    		dataset.addValue(y, "valor estatistica", x);
+    		
+    	}
         
-        final XYSeries series1 = new XYSeries("First");
-        series1.add(1.0, 1.0);
-        series1.add(2.0, 4.0);
-        series1.add(3.0, 3.0);
-        series1.add(4.0, 5.0);
-        series1.add(5.0, 5.0);
-        series1.add(6.0, 7.0);
-        series1.add(7.0, 7.0);
-        series1.add(8.0, 8.0);
-
-        final XYSeries series2 = new XYSeries("Second");
-        series2.add(1.0, 5.0);
-        series2.add(2.0, 7.0);
-        series2.add(3.0, 6.0);
-        series2.add(4.0, 8.0);
-        series2.add(5.0, 4.0);
-        series2.add(6.0, 4.0);
-        series2.add(7.0, 2.0);
-        series2.add(8.0, 1.0);
-
-        final XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(series1);
-        dataset.addSeries(series2);
-                
+        
+        scan.close(); 
         return dataset;
         
     }
    
-    private JFreeChart createChart(final XYDataset dataset) {
+   /* private JFreeChart createChart(final XYDataset dataset) {
         
         final JFreeChart chart = ChartFactory.createXYLineChart(
             "Grafico",      // chart title
-            "X",                      // x axis label
-            "Y",                      // y axis label
+            "Periodo de Tempo",                      // x axis label
+            "Valor da"+estatistica,                      // y axis label
             dataset,                  // data
             PlotOrientation.VERTICAL,
             true,                     // include legend
@@ -97,7 +103,7 @@ public class Grafico extends ApplicationFrame {
                 
         return chart;
         
-    }
+    }*/
 
     // ****************************************************************************
     // * JFREECHART DEVELOPER GUIDE                                               *
@@ -115,12 +121,21 @@ public class Grafico extends ApplicationFrame {
      *
      * @param args  ignored.
      */
-    public static void criaGrafico() {
+    public static void criaGrafico(String argUm, String argDois, String argOito) {
 
-        final Grafico demo = new Grafico("Grafico");
-        demo.pack();
-        RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setVisible(true);
+        caminhoPrimeiraSaida = argUm + "/" + argDois;
+        estatistica = argOito;
+        caminhoSegundaSaida = caminhoPrimeiraSaida + "/regressao" + estatistica;
+    	Grafico demo;
+		try {
+			demo = new Grafico("Grafico");
+			demo.pack();
+	        RefineryUtilities.centerFrameOnScreen(demo);
+	        demo.setVisible(true);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+        
 
     }
 
