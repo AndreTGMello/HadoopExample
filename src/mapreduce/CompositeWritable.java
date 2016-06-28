@@ -24,8 +24,8 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 	private IntWritable xMax = new IntWritable();
 	private DoubleWritable a = new DoubleWritable();
 	private DoubleWritable b = new DoubleWritable();
-	
-	
+
+
 	public DoubleWritable getValor() {
 		return valor;
 	}
@@ -118,7 +118,7 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 		this.variancia = variancia;
 		System.out.println("Media: "+media+". this.media: "+this.media.get()+"\n"
 				+ "Desvio padrao: "+desvioPadrao+". this.desvioPadrao: "+this.desvioPadrao.get()+"\n"
-						+ "Variancia: "+variancia+". this.variancia: "+this.variancia.get()+"\n");
+				+ "Variancia: "+variancia+". this.variancia: "+this.variancia.get()+"\n");
 	} 
 
 	public CompositeWritable(Text x, DoubleWritable y) {
@@ -132,14 +132,14 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 		this.xMin = xMin;
 		this.xMax = xMax;
 	}
-	
-	
+
+
 	public void readFields(DataInput in) throws IOException {
 		valor.readFields(in);
 		media.readFields(in);
 		desvioPadrao.readFields(in);
 		variancia.readFields(in);
-		
+
 		agrupadorX.readFields(in);
 		estatisticaY.readFields(in);
 		xMin.readFields(in);
@@ -153,7 +153,7 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 		media.write(out);
 		desvioPadrao.write(out);
 		variancia.write(out);
-		
+
 		agrupadorX.write(out);
 		estatisticaY.write(out);
 		xMin.write(out);
@@ -161,7 +161,7 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 		a.write(out);
 		b.write(out);
 	}
-	
+
 	/*
 	public void merge(CompositeWritable other) {
 		this.valor += other.valor;
@@ -169,7 +169,7 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 		this.desvioPadrao += other.desvioPadrao;
 		this.variancia += other.variancia;
 	}
-	*/
+	 */
 
 	@Override
 	public String toString() {
@@ -219,19 +219,32 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 		else{
 			String[] esseXArray = esseXString.split("-");
 			String[] outroXArray = outroXString.split("-");
-			int diffAno = Integer.parseInt(esseXArray[0]) - Integer.parseInt(outroXArray[0]);
-			int diffMes = Integer.parseInt(esseXArray[1]) - Integer.parseInt(outroXArray[1]);
-			int diffSemana = Integer.parseInt(esseXArray[2]) - Integer.parseInt(outroXArray[2]);
-			
-			if(diffAno!=0){
-				System.out.println("COMPARABLE diffAno: "+diffAno);
-				return diffAno;
-			}else if(diffMes!=0){
-				System.out.println("COMPARABLE diffMes: "+diffMes);
-				return diffMes;
-			}else if(diffSemana!=0){
-				System.out.println("COMPARABLE diffSemana: "+diffSemana);
-				return diffSemana;
+			if(esseXArray.length==2){
+				int diffAno = Integer.parseInt(esseXArray[0]) - Integer.parseInt(outroXArray[0]);
+				int diffMes = Integer.parseInt(esseXArray[1]) - Integer.parseInt(outroXArray[1]);
+				
+				if(diffAno!=0){
+					System.out.println("COMPARABLE diffAno: "+diffAno);
+					return diffAno;
+				}else if(diffMes!=0){
+					System.out.println("COMPARABLE diffMes: "+diffMes);
+					return diffMes;
+				}
+			}else if(esseXArray.length==3){
+				int diffAno = Integer.parseInt(esseXArray[0]) - Integer.parseInt(outroXArray[0]);
+				int diffMes = Integer.parseInt(esseXArray[1]) - Integer.parseInt(outroXArray[1]);
+				int diffSemana = Integer.parseInt(esseXArray[2]) - Integer.parseInt(outroXArray[2]);
+
+				if(diffAno!=0){
+					System.out.println("COMPARABLE diffAno: "+diffAno);
+					return diffAno;
+				}else if(diffMes!=0){
+					System.out.println("COMPARABLE diffMes: "+diffMes);
+					return diffMes;
+				}else if(diffSemana!=0){
+					System.out.println("COMPARABLE diffSemana: "+diffSemana);
+					return diffSemana;
+				}
 			}
 		}
 		System.out.println("\t\tERRO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");

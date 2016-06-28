@@ -1,6 +1,7 @@
 package mapreduce;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -22,11 +23,8 @@ public class RegressionMapper extends Mapper<LongWritable, Text, Text, Composite
 		String estatistica = conf.get("estatistica");
 		String x = "";
 		double y = 0.0;
-
-		String[] balde = value.toString().split("/t/t");
-
+		
 		int indexStat = 0;
-
 		if(estatistica.equals("MEDIA")){
 			indexStat = 1;
 		}else if(estatistica.equals("DESVIOPADRAO")){
@@ -34,6 +32,8 @@ public class RegressionMapper extends Mapper<LongWritable, Text, Text, Composite
 		}else if(estatistica.equals("VARIANCIA")){
 			indexStat = 3;
 		}
+		
+		String[] balde = value.toString().split("\\t\\t|\\s+");
 
 		x = balde[0];
 		y = Double.parseDouble(balde[indexStat]);
