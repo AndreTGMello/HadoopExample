@@ -198,15 +198,18 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 		int outroX = 0;
 		String esseXString = this.agrupadorX.toString();
 		String outroXString = o.getAgrupadorX().toString();
+		System.out.println("esseXString: "+esseXString+". outroXString: "+outroXString);
 		try {
 			esseX = Integer.parseInt(esseXString);
 			outroX = Integer.parseInt(outroXString);
+			System.out.println("esseX: "+esseX+". outroX: "+outroX);
 			diff = esseX - outroX;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		// Parse Int funcionara para mes e ano:
 		if(diff!=Integer.MAX_VALUE){
+			System.out.println("COMPARABLE diff: "+diff);
 			return diff;
 		}
 		// Caso especial: semanas
@@ -218,13 +221,17 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 			int diffSemana = Integer.parseInt(esseXArray[2]) - Integer.parseInt(outroXArray[2]);
 			
 			if(diffAno!=0){
+				System.out.println("COMPARABLE diffAno: "+diffAno);
 				return diffAno;
 			}else if(diffMes!=0){
+				System.out.println("COMPARABLE diffMes: "+diffMes);
 				return diffMes;
 			}else if(diffSemana!=0){
+				System.out.println("COMPARABLE diffSemana: "+diffSemana);
 				return diffSemana;
 			}
 		}
+		System.out.println("\t\tERRO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		return 0;
 	}
 }

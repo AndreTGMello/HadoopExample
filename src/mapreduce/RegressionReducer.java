@@ -29,12 +29,40 @@ public class RegressionReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY,
 		double xMin = Double.MAX_VALUE;
 		double xMax = 0.0;
 		
+		
 		for (Iterator<CompositeWritable> iterator = values.iterator(); iterator.hasNext();) {
 			CompositeWritable temp = iterator.next();
-			cache.add(temp);
+			
+			Text agrupadorX = new Text();
+			agrupadorX.set(temp.getAgrupadorX().toString());
+			
+			DoubleWritable estatisticaY = new DoubleWritable();
+			estatisticaY.set(temp.getEstatisticaY().get());;
+			
+			CompositeWritable newTemp = new CompositeWritable(agrupadorX, estatisticaY);
+			System.out.println("Inserindo: ");
+			System.out.println(newTemp.getAgrupadorX().toString());
+			System.out.println(newTemp.getEstatisticaY().get());
+			cache.add(newTemp);
 		}
+		
+		System.out.println("FIM1");
+		for (int i = 0; i < cache.size(); i++) {
+			System.out.println("Inseridos: ");
+			System.out.println(cache.get(i).getAgrupadorX().toString());
+			System.out.println(cache.get(i).getEstatisticaY().get());
+		}
+		System.out.println("FIM2");
+		
 		// Utiliza o metodo compareTo implementado em CompositeWritable
 		Collections.sort(cache);
+		
+		for (int i = 0; i < cache.size(); i++) {
+			System.out.println("Pos Sort: ");
+			System.out.println(cache.get(i).getAgrupadorX().toString());
+			System.out.println(cache.get(i).getEstatisticaY().get());
+		}
+		System.out.println("FIM3");
 		
 		for (int i = 0; i < cache.size(); i++) {
 			CompositeWritable cw = cache.get(i);
