@@ -26,8 +26,8 @@ public class RegressionReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY,
 		double a = 0.0;
 		double bNumerador = 0.0;
 		double bDenominador = 0.0;
-		double xMin = Double.MAX_VALUE;
-		double xMax = 0.0;
+		int xMin = Integer.MAX_VALUE;
+		int xMax = 0;
 		
 		
 		for (Iterator<CompositeWritable> iterator = values.iterator(); iterator.hasNext();) {
@@ -118,10 +118,10 @@ public class RegressionReducer<KEY> extends Reducer<KEY, CompositeWritable, KEY,
 		DoubleWritable bWritable = new DoubleWritable();
 		bWritable.set(b);
 		
-		DoubleWritable xMinWritable = new DoubleWritable();
+		IntWritable xMinWritable = new IntWritable();
 		xMinWritable.set(xMin);
 		
-		DoubleWritable xMaxWritable = new DoubleWritable();
+		IntWritable xMaxWritable = new IntWritable();
 		xMaxWritable.set(xMax);
 		
 		resultSet = new CompositeWritable(aWritable, bWritable, xMinWritable, xMaxWritable);
