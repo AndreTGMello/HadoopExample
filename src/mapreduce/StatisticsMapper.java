@@ -128,7 +128,7 @@ public class StatisticsMapper extends Mapper<LongWritable, Text, Text, DoubleWri
 			else
 				numeroSemana = ((int) Math.floor(Integer.parseInt(valor)/7)) + 1;
 			
-			return preencheData("MES",balde)+"-Semana "+doisDigitos.format(numeroSemana);
+			return preencheData("MES",balde)+"-"+doisDigitos.format(numeroSemana);
 		}
 		
 		
