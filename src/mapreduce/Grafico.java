@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -68,8 +69,8 @@ public class Grafico extends ApplicationFrame {
         	baldeCategoria++;
         }
         axis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
-        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setVerticalTickLabels(true);
+        //NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        //rangeAxis.setVerticalTickLabels(true);
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         setContentPane(chartPanel);
@@ -87,43 +88,54 @@ public class Grafico extends ApplicationFrame {
     	a = Double.parseDouble(scan.next());
     	b = Double.parseDouble(scan.next());
     	scan.close();
-        f = new File(caminhoPrimeiraSaida+"/"+moldeArquivo);
-        scan = new Scanner(f);
-    	String x = "";
-    	double y = 0;
-    	int indiceEstatistica = 0;
-    	if(estatistica.equals("MEDIA"))
-    		indiceEstatistica = 1;
-    	else if (estatistica.equals("DESVIOPADRAO"))
-    		indiceEstatistica = 2;
-    	else if(estatistica.equals("VARIANCIA"))
-    		indiceEstatistica = 3;
+    	f = new File(caminhoPrimeiraSaida+"/"+moldeArquivo);
     	int indiceRegressao = 0;
-    		
-    	while(scan.hasNext()){
-    		
-    		x = scan.next();
-    		categorias.add(x);
-    		int z = 0;
-    		for(z = 0; z < indiceEstatistica; z++)
-    		{
-    			y = Double.parseDouble(scan.next());
-    		}
-    		for(; z < 3; z++)
-    		{
-    			scan.next();
-    		}
-    		dataset.addValue(y, "valor estatistica", x);
-    		resultadofuncao = a + b*indiceRegressao;
-    		dataset.addValue(resultadofuncao, "previsao", x);
-    		indiceRegressao++;
-    		
+    	while(f.exists())
+    	{
+    		scan = new Scanner(f);
+        	String x = "";
+        	double y = 0;
+        	int indiceEstatistica = 0;
+        	if(estatistica.equals("MEDIA"))
+        		indiceEstatistica = 1;
+        	else if (estatistica.equals("DESVIOPADRAO"))
+        		indiceEstatistica = 2;
+        	else if(estatistica.equals("VARIANCIA"))
+        		indiceEstatistica = 3;       	
+        		
+        	while(scan.hasNext()){
+        		
+        		x = scan.next();
+        		categorias.add(x);
+        		int z = 0;
+        		for(z = 0; z < indiceEstatistica; z++)
+        		{
+        			y = Double.parseDouble(scan.next());
+        		}
+        		for(; z < 3; z++)
+        		{
+        			scan.next();
+        		}
+        		dataset.addValue(y, "valor estatistica", x);
+        		resultadofuncao = a + b*indiceRegressao;
+        		dataset.addValue(resultadofuncao, "previsao", x);
+        		indiceRegressao++;
+        		
+        	}
+        	for(int h = 0; h < 10; h++){
+        		resultadofuncao = a + b*indiceRegressao;
+            	dataset.addValue(resultadofuncao, "previsao", "P"+Integer.toString(h));
+            	indiceRegressao++;
+        	}
+        	DecimalFormat doisDigitos = new DecimalFormat("00000");
+        	int numArquivo = Integer.parseInt(moldeArquivo.split("-")[2]);
+        	numArquivo++;
+        	moldeArquivo = "part-r-"+doisDigitos.format(numArquivo);
+        	f = new File(caminhoPrimeiraSaida+"/"+moldeArquivo);
+        	
+        	
     	}
-    	for(int h = 0; h < 10; h++){
-    		resultadofuncao = a + b*indiceRegressao;
-        	dataset.addValue(resultadofuncao, "previsao", "P"+Integer.toString(h));
-        	indiceRegressao++;
-    	}
+        
     	scan.close();
         return dataset;
     }
