@@ -28,26 +28,26 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
 public class Grafico extends ApplicationFrame {
-	public static String caminhoPrimeiraSaida = "";
-	public static String caminhoSegundaSaida = "";
-	public static String estatistica = "";
-	public static ArrayList<String> categorias = new ArrayList<String>();
+	public static String caminhoPrimeiraSaida = "";//caminho para o output gerado pela primeira tarefa de mapreduce
+	public static String caminhoSegundaSaida = "";//caminho para o output gerado pela segunda tarefa de mapreduce: a regressao
+	public static String estatistica = "";//estatistica escolhida pelo usuario(media, desviopadrao ou variancia)
+	public static ArrayList<String> categorias = new ArrayList<String>();//valores dos labels do eixo x
     public Grafico(final String title) throws FileNotFoundException {
         super(title);
         final JFreeChart chart = ChartFactory.createLineChart("Grafico", "Periodo", "Estatistica", createDataset(), PlotOrientation.VERTICAL, true, true, false);
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
-        renderer.setSeriesShapesVisible(0, true);
+        renderer.setSeriesShapesVisible(0, true);//coloca os pontos das retas de modo visivel
         renderer.setSeriesShapesVisible(1, true);
         CategoryAxis axis = chart.getCategoryPlot().getDomainAxis();
         int baldeCategoria = 1;
-        double proporcaoD = (categorias.size()+10)/41; 
-        int proporcao = (int) proporcaoD;
-        if(proporcao == 0)
+        double proporcaoD = (categorias.size()+10)/41; //determinando quantos labels do eixo X podem
+        int proporcao = (int) proporcaoD;              //aparecer de forma a continuar sempre legivel
+        if(proporcao == 0)//para evitar uma divisao por 0
         	proporcao = 1;
         int indiceCategoria = 0;
         for(; indiceCategoria < categorias.size(); indiceCategoria++)
-        {
+        {   //o modo encontrado de esconder um label, foi pinta-lo de branco e colocar tamanho minimo
         	axis.setTickLabelPaint(categorias.get(indiceCategoria), Color.white);
         	if(baldeCategoria%proporcao == 0)
         	{
@@ -57,8 +57,8 @@ public class Grafico extends ApplicationFrame {
         		axis.setTickLabelFont(categorias.get(indiceCategoria),new Font("Helvetica", Font.PLAIN, 0));
         	baldeCategoria++;
         }
-        for(indiceCategoria = 0; indiceCategoria < 10; indiceCategoria++)
-        {
+        for(indiceCategoria = 0; indiceCategoria < 10; indiceCategoria++)//realiza o mesmo procedimento para os valores de p0 a p9 
+        {                                                                //que sao previsoes de valores alem dos escolhidos pelo usuario
         	axis.setTickLabelPaint("P"+indiceCategoria, Color.white);
         	if(baldeCategoria%proporcao == 0)
         	{
@@ -68,9 +68,7 @@ public class Grafico extends ApplicationFrame {
         		axis.setTickLabelFont("P"+indiceCategoria,new Font("Helvetica", Font.PLAIN, 0));
         	baldeCategoria++;
         }
-        axis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
-        //NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        //rangeAxis.setVerticalTickLabels(true);
+        axis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);//para melhor visibilidade, coloca-se verticalmente os labels do eixo x
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         setContentPane(chartPanel);
@@ -78,18 +76,18 @@ public class Grafico extends ApplicationFrame {
     
     private DefaultCategoryDataset createDataset() throws FileNotFoundException {
     	final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    	String moldeArquivo = "part-r-00000"; //permitir mais depois
-    	File f = new File(caminhoSegundaSaida+"/"+moldeArquivo);
-    	Scanner scan = new Scanner(f);
-    	double a = 0.0;
+    	String moldeArquivo = "part-r-00000";
+    	File f = new File(caminhoSegundaSaida+"/"+moldeArquivo); //abre o output gerado pela regressao para
+    	Scanner scan = new Scanner(f);                           //pegar os valores necessarios para tracar a
+    	double a = 0.0;                                          //reta da previsao dinamicamente
     	double b = 0.0;
     	double resultadofuncao = 0.0;
     	scan.next();
     	a = Double.parseDouble(scan.next());
     	b = Double.parseDouble(scan.next());
     	scan.close();
-    	f = new File(caminhoPrimeiraSaida+"/"+moldeArquivo);
-    	int indiceRegressao = 0;
+    	f = new File(caminhoPrimeiraSaida+"/"+moldeArquivo);//depois, pega-se o primeiro output para colocar
+    	int indiceRegressao = 0;                            //na reta os valores da estatistica escolhida na primeira etapa
     	while(f.exists())
     	{
     		scan = new Scanner(f);
@@ -116,22 +114,22 @@ public class Grafico extends ApplicationFrame {
         		{
         			scan.next();
         		}
-        		dataset.addValue(y, "valor estatistica", x);
+        		dataset.addValue(y, "valor estatistica", x);//adiciona valores ao grafico
         		resultadofuncao = a + b*indiceRegressao;
         		dataset.addValue(resultadofuncao, "previsao", x);
         		indiceRegressao++;
         		
         	}
-        	for(int h = 0; h < 10; h++){
+        	for(int h = 0; h < 10; h++){//realiza 10 previsoes para alem do ano maximo escolhido pelo usuario
         		resultadofuncao = a + b*indiceRegressao;
             	dataset.addValue(resultadofuncao, "previsao", "P"+Integer.toString(h));
             	indiceRegressao++;
         	}
-        	DecimalFormat doisDigitos = new DecimalFormat("00000");
-        	int numArquivo = Integer.parseInt(moldeArquivo.split("-")[2]);
-        	numArquivo++;
-        	moldeArquivo = "part-r-"+doisDigitos.format(numArquivo);
-        	f = new File(caminhoPrimeiraSaida+"/"+moldeArquivo);
+        	DecimalFormat doisDigitos = new DecimalFormat("00000");//permite que, caso tenha mais
+        	int numArquivo = Integer.parseInt(moldeArquivo.split("-")[2]);//do que um output
+        	numArquivo++;                                         //consiga-se ler todos os
+        	moldeArquivo = "part-r-"+doisDigitos.format(numArquivo);//arquivos para gerar
+        	f = new File(caminhoPrimeiraSaida+"/"+moldeArquivo);  //o grafico corretamente
         	
         	
     	}
@@ -141,7 +139,9 @@ public class Grafico extends ApplicationFrame {
     }
     
     public static void criaGrafico(String argUm, String argDois, String argOito) {
-
+    	//argUm: raiz da pasta de saida escolhida pelo usuario
+    	//argDois: nome do arquivo de saida escolhido pelo usuario
+    	//argOito: estatistica escolhida pelo usuario para a regressao
         caminhoPrimeiraSaida = argUm + "/" + argDois;
         estatistica = argOito;
         caminhoSegundaSaida = caminhoPrimeiraSaida + "/regressao" + estatistica;
