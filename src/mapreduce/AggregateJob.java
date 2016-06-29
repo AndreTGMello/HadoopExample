@@ -23,8 +23,6 @@ public class AggregateJob extends Configured implements Tool {
 		conf.set("agregador", args[3]);
 		conf.set("dado", args[4]);
 
-		//JobConf job = new JobConf(conf);
-
 		Job job = Job.getInstance(conf);
 
 		job.setJarByClass(getClass());
@@ -32,7 +30,6 @@ public class AggregateJob extends Configured implements Tool {
 
 		if(!args[7].equals("ZZ"))
 			FileInputFormat.setInputPathFilter(job, PaisFilter.class);
-		//FileInputFormat.addInputPath(job, new Path(args[0]+"/"+args[5])); //new Path(args[0]+"/*nome_da_pasta" para que arquivos dentro de pastas tambem sejam lidos
 		int anoIni = 0;
 		int anoFim = Integer.parseInt(args[6]);
 		for(anoIni = Integer.parseInt(args[5]); anoIni <= anoFim; anoIni++){
@@ -41,7 +38,6 @@ public class AggregateJob extends Configured implements Tool {
 		FileOutputFormat.setOutputPath(job, new Path(args[1]+args[2]));
 
 		job.setMapperClass(StatisticsMapper.class);
-		//job.setCombinerClass(MediaReducer.class);
 		job.setReducerClass(StatisticsReducer.class);
 
 
@@ -51,7 +47,6 @@ public class AggregateJob extends Configured implements Tool {
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(CompositeWritable.class);
 
-		//job.setInputFormatClass(SingleInputFormat.class);
 
 		job.setNumReduceTasks(1);
 
@@ -73,17 +68,13 @@ public class AggregateJob extends Configured implements Tool {
 		FileOutputFormat.setOutputPath(job, new Path(args[1]+"/"+args[2]+"/regressao"+args[8]));
 
 		job.setMapperClass(RegressionMapper.class);
-		//job.setCombinerClass(MediaReducer.class);
 		job.setReducerClass(RegressionReducer.class);
-
 
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(CompositeWritable.class);
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(CompositeWritable.class);
-
-		//job.setInputFormatClass(SingleInputFormat.class);
 
 		job.setNumReduceTasks(1);
 
@@ -449,23 +440,11 @@ public class AggregateJob extends Configured implements Tool {
 					+ "\nDigite a sigla do pais que deseja realizar a analise: (Digite ZZ para usar todos os paises");
 			pais = scan.next().toUpperCase();
 			if (!pais.equals("ZZ"))
-			{
-				/*String pastaPaises = "";
-				boolean tratamentoInterno = false;
-				while(tratamentoInterno == false)
-				{
-					System.out.println("\n Digite o caminho para a pasta raiz onde encontra-se a pasta Paises: \n");
-					pastaPaises = scan.next();
-					f = new File(pastaPaises+"/Paises");
-					if(f.exists())
-						tratamentoInterno = true;
-					else
-						System.out.println("Pasta invalida, tente novamente");
-				}	*/				
+			{		
 				EstacoesPais lista = EstacoesPais.getInstance();
 				try
 				{
-					lista.criaListaEstacoes(/*pastaPaises,*/ pais);
+					lista.criaListaEstacoes(pais);
 					tratamento = true;
 				}
 				catch(FileNotFoundException e)
@@ -508,18 +487,15 @@ public class AggregateJob extends Configured implements Tool {
 		params[7] = pais;
 		params[8] = estatistica;
 
-		while(true)//mantendo o while true de antes
+		while(true)
 		{
-
-			// Roda run() com a lista de argumentos passados na execucao do jar
-			// + argumentos obtidos interativamente atraves das perguntas acima.
 			int rc = ToolRunner.run(new AggregateJob(), params);
 			System.exit(rc);
 		}
 
 	}
 
-	public int run(String[] args) throws Exception {//so para parar de dar erro
+	public int run(String[] args) throws Exception {
 		firstRun(args);
 		if(!args[8].equals("N")){
 			secondRun(args);	

@@ -96,11 +96,11 @@ public class Grafico extends ApplicationFrame {
     		indiceEstatistica = 1;
     	else if (estatistica.equals("DESVIOPADRAO"))
     		indiceEstatistica = 2;
-    	else if(estatistica.equals("VARIANCIA"))//CONFIRMAR RS
+    	else if(estatistica.equals("VARIANCIA"))
     		indiceEstatistica = 3;
     	int indiceRegressao = 0;
     		
-    	while(scan.hasNext()){//faz primeira reta
+    	while(scan.hasNext()){
     		
     		x = scan.next();
     		categorias.add(x);
@@ -126,7 +126,6 @@ public class Grafico extends ApplicationFrame {
     	}
     	scan.close();
         return dataset;
-        
     }
     
     public static void criaGrafico(String argUm, String argDois, String argOito) {
@@ -143,8 +142,5 @@ public class Grafico extends ApplicationFrame {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-        
-
     }
-
 }

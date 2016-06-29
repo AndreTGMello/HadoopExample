@@ -162,15 +162,6 @@ public class CompositeWritable implements Writable, Comparable<CompositeWritable
 		b.write(out);
 	}
 
-	/*
-	public void merge(CompositeWritable other) {
-		this.valor += other.valor;
-		this.media += other.media;
-		this.desvioPadrao += other.desvioPadrao;
-		this.variancia += other.variancia;
-	}
-	 */
-
 	@Override
 	public String toString() {
 		if(a.get()!=0.0 && b.get()!=0.0){

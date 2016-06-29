@@ -41,7 +41,6 @@ public class CombinedInputFormat extends CombineFileInputFormat<LongWritable, Te
         @Override
         public void initialize(InputSplit inputSplit, TaskAttemptContext context)
                 throws IOException, InterruptedException {
-            //linerecordReader.initialize(inputSplit, context);
         }
 
         @Override
