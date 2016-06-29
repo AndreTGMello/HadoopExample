@@ -2,6 +2,7 @@ package mapreduce;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,10 +29,11 @@ public class EstacoesPais {
 	
 	private static List<String> listaEstacoes = new LinkedList<String>();
 	
-	public static void criaListaEstacoes(String caminho, String pais) throws FileNotFoundException{
+	public static void criaListaEstacoes(/*String caminho,*/ String pais) throws FileNotFoundException{
 		if(!pais.equals("ZZ"))
 		{
-			File f = new File(caminho +"/Paises/"+pais+".txt");
+			InputStream f = EstacoesPais.class.getResourceAsStream("/"+pais+".txt"); 
+			//File f = new File(caminho +"/Paises/"+pais+".txt");
 			Scanner scan = new Scanner(f);
 			while(scan.hasNext()){
 				listaEstacoes.add(scan.next());

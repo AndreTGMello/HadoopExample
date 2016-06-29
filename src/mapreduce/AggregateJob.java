@@ -450,7 +450,7 @@ public class AggregateJob extends Configured implements Tool {
 			pais = scan.next().toUpperCase();
 			if (!pais.equals("ZZ"))
 			{
-				String pastaPaises = "";
+				/*String pastaPaises = "";
 				boolean tratamentoInterno = false;
 				while(tratamentoInterno == false)
 				{
@@ -461,11 +461,11 @@ public class AggregateJob extends Configured implements Tool {
 						tratamentoInterno = true;
 					else
 						System.out.println("Pasta invalida, tente novamente");
-				}					
+				}	*/				
 				EstacoesPais lista = EstacoesPais.getInstance();
 				try
 				{
-					lista.criaListaEstacoes(pastaPaises, pais);
+					lista.criaListaEstacoes(/*pastaPaises,*/ pais);
 					tratamento = true;
 				}
 				catch(FileNotFoundException e)
