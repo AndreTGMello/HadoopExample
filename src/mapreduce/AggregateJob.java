@@ -83,7 +83,7 @@ public class AggregateJob extends Configured implements Tool {
 
 	public static void main(String[] args) throws Exception {
 		Scanner scan = new Scanner(System.in);
-
+		//Guarda input do usuario para gerar outputs compativeis
 		String dado = null;
 		String anoIni = null;
 		String anoFim = null;
@@ -95,7 +95,13 @@ public class AggregateJob extends Configured implements Tool {
 		String estatistica = null;
 		String[] params = new String[9];
 
-		File f = null;;
+		File f = null;
+		//comeco da interface amigavel para conseguir os argumentos interativamente com o usuario
+		//cada pergunta ao usuario possui seus proprios tratamentos para validacao
+		//para cada pergunta, transforma a resposta para caixa alta completamente, para que
+		//o caps nao interfira no processamento, independente de como o usuario escreva
+		//impede-se tambem que escolha opcoes indisponiveis, que escolha um ano final menor que
+		//um ano inicial, que um grafico seja gerado caso nao haja dados o suficiente, e etc...
 		boolean tratamento = false;
 		while(tratamento == false)
 		{
@@ -444,7 +450,7 @@ public class AggregateJob extends Configured implements Tool {
 				EstacoesPais lista = EstacoesPais.getInstance();
 				try
 				{
-					lista.criaListaEstacoes(pais);
+					lista.criaListaEstacoes(pais); //determina as estacoes pertecentes ao pais escolhido pelo usuario
 					tratamento = true;
 				}
 				catch(FileNotFoundException e)
@@ -496,9 +502,9 @@ public class AggregateJob extends Configured implements Tool {
 	}
 
 	public int run(String[] args) throws Exception {
-		firstRun(args);
+		firstRun(args); //primeira etapa de mapreduce
 		if(!args[8].equals("N")){
-			secondRun(args);	
+			secondRun(args); //etapa de regressao com mapreduce	
 		}
 		try{
 			Grafico.criaGrafico(args[1], args[2], args[8]);
