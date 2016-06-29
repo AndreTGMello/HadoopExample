@@ -20,7 +20,7 @@ public class StatisticsMapper extends Mapper<LongWritable, Text, Text, DoubleWri
 		String agregador = conf.get("agregador");
 		int iniDado = 0;
 		int fimDado = 0;
-		
+		//determinacao de onde encontra-se cada atributo dos arquivos de entrada
 		if(dado.equals("MEDTEMP")){
 			iniDado = 24;
 			fimDado = 30;
@@ -67,20 +67,20 @@ public class StatisticsMapper extends Mapper<LongWritable, Text, Text, DoubleWri
 		}
 		
 		String balde = value.toString();
-		if(balde.charAt(0) != 'S'){
+		if(balde.charAt(0) != 'S'){ //pula a primeira linha de cada arquivo
 			String valor = "";
 			valor += preencheData(agregador, balde);
-			word.set(valor);
+			word.set(valor);//insere a data na tupla como definido pelo usuario
 			
 			valor = "";
 			while(iniDado < fimDado){
-				if(balde.charAt(iniDado) != ' '){
+				if(balde.charAt(iniDado) != ' '){//pula entradas vazias ou espacos em campos com valores
 					valor += balde.charAt(iniDado);
 				}
 				iniDado++;
 			}
 			try {
-				if(valorValido(valor)){
+				if(valorValido(valor)){// se o valor for valido, insere-se na tupla
 					count = new DoubleWritable(Double.parseDouble(valor));
 					context.write(word, count);
 				}
@@ -91,10 +91,10 @@ public class StatisticsMapper extends Mapper<LongWritable, Text, Text, DoubleWri
 		}
 	}
 
-	private String preencheData(String agregador, String balde) {
-		DecimalFormat doisDigitos = new DecimalFormat("00");
-		int iniAgregador = 0;
-		int fimAgregador = 0;
+	private String preencheData(String agregador, String balde) {//para a key da tupla, gera-se uma data
+		DecimalFormat doisDigitos = new DecimalFormat("00");     //conforme definido pelo usuario
+		int iniAgregador = 0;//para acessar o atributo YEARMODA do arquivo de entrada
+		int fimAgregador = 0;//no ponto correto de acordo com a definicao do usuario
 		String valor = "";
 		int numeroSemana = 0;
 				
@@ -121,7 +121,7 @@ public class StatisticsMapper extends Mapper<LongWritable, Text, Text, DoubleWri
 		if(agregador.equals("MES")){
 			return preencheData("ANO", balde)+"-"+valor;
 		}
-		else if (agregador.equals("SEMANA")){
+		else if (agregador.equals("SEMANA")){//tratamento para definir as semanas de cada mes
 			numeroSemana = 0;
 			if(Integer.parseInt(valor)%7 == 0)
 				numeroSemana = (int) Math.floor(Integer.parseInt(valor)/7);
@@ -135,9 +135,9 @@ public class StatisticsMapper extends Mapper<LongWritable, Text, Text, DoubleWri
 		return valor;
 	}
 
-	private boolean valorValido(String valor) {
-		int indice = 0;
-		for(indice = 0; indice < valor.length(); indice++){
+	private boolean valorValido(String valor) {//checa-se se um atributo de entrada existe:
+		int indice = 0;                        //todo valor que contem caracteres diferentes de espaco, 9 ou ponto
+		for(indice = 0; indice < valor.length(); indice++){//classifica-se como valido.
 			if(valor.charAt(indice) != ' ' && valor.charAt(indice) != '9' && valor.charAt(indice)!= '.')
 				return true;
 		}
